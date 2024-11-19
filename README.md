@@ -21,7 +21,15 @@ Whether you're a fellow student, instructor, or simply curious about the path to
 
 Here’s what you’ll currently find in this repository:
 
-### 1. **[Project/Folder Name]**
+### 1. **Notebooks**
+   - **Description**: Directory full of notebooks to learn things like Python, Scikit-learn, Numby, Pandas, Data cleaning, Machine learning...
+   - **Highlights**: Python, Scikit-learn, Numby, Pandas, Data cleaning, Machine learning...
+
+### 2. **Brief_**
+   - **Description**: Directories used for small projects that don't require dedicated GitHub repositories...
+   - **Highlights**: Docker, ML...
+
+### 3. **[Project/Folder Name]**
    - **Description**: [Brief overview of the project or folder contents]
    - **Highlights**: [Key functionalities, technologies, or skills demonstrated]
 
@@ -45,7 +53,7 @@ Feel free to explore, comment, or provide feedback. While this repository is pri
 
 If you have questions about this repository or my journey as an AI developer, feel free to reach out:
 - **GitHub**: [TonyVallad](https://github.com/TonyVallad)
-- **Email**: [Your Email Here]
+- **Email**: anthony.vallad.cps@gmail.com
 
 ---
 
