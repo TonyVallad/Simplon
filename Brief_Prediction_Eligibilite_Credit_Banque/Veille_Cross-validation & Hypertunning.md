@@ -52,8 +52,7 @@ Le score moyen est une estimation des performances générales du modèle sur de
 - **Faible variance** : Indique que le modèle est cohérent et robuste sur différents sous-ensembles des données.
 - **Forte variance** : Suggère que le modèle est sensible aux variations dans les données, ce qui peut indiquer un problème de surapprentissage ou de sous-apprentissage.
 
-## Optimisation des hyperparamètres (GridSearchCV et
-RandomizedSearchCV)
+## Optimisation des hyperparamètres (GridSearchCV et RandomizedSearchCV)
 
 ### **1. Concepts de base**
 
