@@ -1,4 +1,4 @@
-# **<h1 align="center">PyTorch</h1>**
+**<h1 align="center">PyTorch</h1>**
 
 ## What is PyTorch?
 

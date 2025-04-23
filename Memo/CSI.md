@@ -1,4 +1,4 @@
-# **<h1 align="center">Congestion Score Index (CSI)</h1>**
+**<h1 align="center">Congestion Score Index (CSI)</h1>**
 
 ## What is the Congestion Score Index?
 

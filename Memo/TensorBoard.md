@@ -1,4 +1,4 @@
-# **<h1 align="center">TensorBoard</h1>**
+**<h1 align="center">TensorBoard</h1>**
 
 ## What is TensorBoard?
 

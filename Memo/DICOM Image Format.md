@@ -1,4 +1,4 @@
-# **<h1 align="center">DICOM Image Format</h1>**
+**<h1 align="center">DICOM Image Format</h1>**
 
 ## What is DICOM?
 
