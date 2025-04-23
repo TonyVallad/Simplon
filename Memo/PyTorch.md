@@ -82,6 +82,152 @@ z.backward()
 print(x.grad)  # Shows d(z)/d(x)
 ```
 
+## Backpropagation in PyTorch
+
+Backpropagation is the core algorithm for training neural networks, and PyTorch's implementation through `autograd` makes this process efficient and flexible.
+
+### How Backpropagation Works
+
+Backpropagation consists of two main phases:
+
+1. **Forward Pass**: Computation flows from inputs to outputs, calculating predictions and loss
+2. **Backward Pass**: Gradients flow backward from the loss to inputs, updating model parameters
+
+![Backpropagation Flow](https://miro.medium.com/max/1400/1*q1M7LGiDTirwU-4WUdF8vw.png)
+
+### Computational Graph and Chain Rule
+
+During forward computation, PyTorch builds a computational graph that tracks operations:
+
+```python
+import torch
+
+# Create tensors with gradient tracking
+x = torch.tensor([2.0], requires_grad=True)
+w = torch.tensor([3.0], requires_grad=True)
+b = torch.tensor([1.0], requires_grad=True)
+
+# Forward pass: y = w*x + b
+y = w * x + b  # Result: tensor([7.], grad_fn=<AddBackward0>)
+
+# Loss calculation
+loss = (y - 5)**2  # Result: tensor([4.], grad_fn=<PowBackward0>)
+```
+
+When `loss.backward()` is called, PyTorch applies the chain rule to compute derivatives:
+
+```python
+# Backward pass
+loss.backward()
+
+# Access gradients
+print(x.grad)  # d(loss)/dx = 2*(y-5)*w = 2*2*3 = 12
+print(w.grad)  # d(loss)/dw = 2*(y-5)*x = 2*2*2 = 8  
+print(b.grad)  # d(loss)/db = 2*(y-5)*1 = 2*2*1 = 4
+```
+
+### The Mathematics Behind Backpropagation
+
+For a neural network with loss function L and weights w, the core of backpropagation is computing ∂L/∂w using the chain rule.
+
+For a simple network with:
+- Input x
+- Weight w
+- Output y = wx
+- Loss L(y)
+
+The gradient calculation is:
+∂L/∂w = (∂L/∂y) × (∂y/∂w) = (∂L/∂y) × x
+
+PyTorch's autograd engine handles these calculations automatically, even for complex models with millions of parameters.
+
+### Optimization with Gradients
+
+Once gradients are computed, an optimizer updates the parameters:
+
+```python
+# Initialize parameters
+w = torch.tensor([2.0], requires_grad=True)
+b = torch.tensor([0.0], requires_grad=True)
+learning_rate = 0.1
+
+# Training loop (simplified)
+for epoch in range(100):
+    # Forward pass
+    y_pred = w * x + b
+    loss = (y_pred - y_true)**2
+    
+    # Backward pass
+    loss.backward()
+    
+    # Manual optimization step (SGD)
+    with torch.no_grad():  # No tracking needed for updates
+        w -= learning_rate * w.grad
+        b -= learning_rate * b.grad
+        
+        # Zero gradients for next iteration
+        w.grad.zero_()
+        b.grad.zero_()
+```
+
+### Backpropagation Through Time (BPTT)
+
+For recurrent neural networks, PyTorch implements Backpropagation Through Time:
+
+```python
+# Simplified RNN example
+hidden = torch.zeros(1, 10, requires_grad=True)
+for input in sequence:
+    hidden = torch.tanh(linear1(input) + linear2(hidden))
+    output = linear3(hidden)
+    loss += loss_function(output, target)
+
+# Gradients flow back through time steps
+loss.backward()
+```
+
+### Gradient Flow Problems
+
+Deep networks can suffer from vanishing or exploding gradients. PyTorch provides tools to diagnose these issues:
+
+```python
+# Monitor gradient norms during training
+total_norm = 0
+for p in model.parameters():
+    param_norm = p.grad.detach().data.norm(2)
+    total_norm += param_norm.item() ** 2
+total_norm = total_norm ** 0.5
+print(f"Gradient norm: {total_norm}")
+```
+
+PyTorch also offers solutions like gradient clipping:
+
+```python
+torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+```
+
+### Custom Backpropagation
+
+For advanced cases, PyTorch allows defining custom backward operations:
+
+```python
+class CustomFunction(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, input):
+        ctx.save_for_backward(input)
+        return input.clamp(min=0)
+        
+    @staticmethod
+    def backward(ctx, grad_output):
+        input, = ctx.saved_tensors
+        grad_input = grad_output.clone()
+        grad_input[input < 0] = 0
+        return grad_input
+        
+# Usage
+custom_relu = CustomFunction.apply
+```
+
 ## Building Models with PyTorch
 
 PyTorch provides two main approaches to building neural networks:
