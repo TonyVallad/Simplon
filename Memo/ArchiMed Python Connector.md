@@ -1,4 +1,4 @@
-**<h1 align="center">Archimed Python Connector</h1>**
+**<h1 align="center">ArchiMed Python Connector</h1>**
 
 ## Imports
 ```python
