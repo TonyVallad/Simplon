@@ -1,5 +1,12 @@
 **<h1 align="center">ArchiMed Python Connector</h1>**
 
+<p align="center">
+  <img src="https://www.cic-it-nancy.fr/uploads/2024/10/logo_platform_archimed.png" alt="ArchiMed Logo" width="300">
+</p>
+
+## About ArchiMed
+https://www.cic-it-nancy.fr/fr/plateforme-archimed/
+
 ## Imports
 ```python
 from ArchiMedConnector.A3_Connector import A3_Connector # import Connector
