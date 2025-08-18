@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CNN – 8. Troubleshooting</title>
+    <meta name="description" content="Common CNN issues and fixes: overfitting, vanishing gradients, training instabilities, low utilization." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">CNN</a> / 8. Troubleshooting</div>
+        <h1>8. Troubleshooting</h1>
+        <p>Diagnose and fix common training and deployment problems.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#overfit">Overfitting</a></li>
+            <li><a href="#underfit">Underfitting</a></li>
+            <li><a href="#instability">Instabilities</a></li>
+            <li><a href="#util">Utilization</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="overfit">
+          <h2>Overfitting</h2>
+          <ul>
+            <li>Increase augmentation; add dropout or weight decay.</li>
+            <li>Gather more data or use mixup/cutmix.</li>
+            <li>Early stopping and ensembling.</li>
+          </ul>
+        </section>
+
+        <section id="underfit">
+          <h2>Underfitting</h2>
+          <ul>
+            <li>Increase model capacity or train longer.</li>
+            <li>Reduce regularization/augmentation strength.</li>
+            <li>Tune learning rate and schedule.</li>
+          </ul>
+        </section>
+
+        <section id="instability">
+          <h2>Instabilities</h2>
+          <ul>
+            <li>Lower the learning rate; use gradient clipping.</li>
+            <li>Check initialization and normalization placements.</li>
+            <li>Inspect data (labels, corrupt images) and loss for NaNs.</li>
+          </ul>
+        </section>
+
+        <section id="util">
+          <h2>Low Utilization</h2>
+          <ul>
+            <li>Increase DataLoader workers; use pinned memory and prefetching.</li>
+            <li>Ensure I/O isn’t the bottleneck; cache decoded datasets.</li>
+            <li>Use mixed precision and larger batches if memory allows.</li>
+          </ul>
+        </section>
+
+        <div class="course-nav">
+          <a href="07_inference_optimization.html">← 7. Inference & Optimization</a>
+          <a href="09_glossary_references.html">Next: Glossary & References →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

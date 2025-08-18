@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 6. Metrics</title>
+    <meta name="description" content="Classification, regression, segmentation/detection metrics; calibration and thresholding." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 6. Metrics</div>
+        <h1>6. Metrics</h1>
+        <p>Measure what matters. Align metrics with real-world costs and benefits.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#classification">Classification</a></li>
+            <li><a href="#regression">Regression</a></li>
+            <li><a href="#seg-det">Segmentation & Detection</a></li>
+            <li><a href="#calibration">Calibration</a></li>
+            <li><a href="#thresholding">Thresholding</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="classification">
+          <h2>Classification</h2>
+          <div class="grid-2">
+            <div>
+              <ul>
+                <li><strong>Accuracy</strong>: fraction of correct predictions; misleading for imbalanced data.</li>
+                <li><strong>Precision</strong>: TP / (TP + FP).</li>
+                <li><strong>Recall</strong>: TP / (TP + FN).</li>
+                <li><strong>F1</strong>: harmonic mean of precision and recall.</li>
+                <li><strong>ROC AUC</strong>: threshold-independent; insensitive to class imbalance.</li>
+                <li><strong>PR AUC</strong>: preferred for rare positives.</li>
+                <li><strong>Top-k accuracy</strong> for multi-class with large label sets.</li>
+              </ul>
+              <pre><code># scikit-learn: metrics example
+from sklearn.metrics import precision_recall_fscore_support, roc_auc_score
+prec, rec, f1, _ = precision_recall_fscore_support(y_true, y_pred, average='binary')
+roc = roc_auc_score(y_true, y_score)  # y_score are probabilities/logits
+</code></pre>
+            </div>
+            <figure>
+              <svg viewBox="0 0 300 220" width="100%" height="220" role="img" aria-label="Confusion matrix">
+                <g fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="30" y="30" width="160" height="160" />
+                  <line x1="110" y1="30" x2="110" y2="190" />
+                  <line x1="30" y1="110" x2="190" y2="110" />
+                  <text x="70" y="80" text-anchor="middle" font-size="12" fill="var(--ok)">TP</text>
+                  <text x="150" y="80" text-anchor="middle" font-size="12" fill="var(--warn)">FP</text>
+                  <text x="70" y="160" text-anchor="middle" font-size="12" fill="var(--warn)">FN</text>
+                  <text x="150" y="160" text-anchor="middle" font-size="12">TN</text>
+                </g>
+              </svg>
+              <figcaption>Confusion matrix: the basis for many classification metrics.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="regression">
+          <h2>Regression</h2>
+          <ul>
+            <li><strong>MAE</strong>: median-friendly; interpretable in target units.</li>
+            <li><strong>MSE</strong> / <strong>RMSE</strong>: penalize large errors more; RMSE in original units.</li>
+            <li><strong>R²</strong>: variance explained; beware over-optimism with leakage.</li>
+            <li><strong>MAPE</strong>: relative error; unstable near zero.</li>
+          </ul>
+        </section>
+
+        <section id="seg-det">
+          <h2>Segmentation & Detection</h2>
+          <ul>
+            <li><strong>IoU/Jaccard</strong> and <strong>Dice</strong> for segmentation overlap.</li>
+            <li><strong>mAP</strong> across IoU thresholds summarizes detection performance.</li>
+          </ul>
+        </section>
+
+        <section id="calibration">
+          <h2>Calibration</h2>
+          <p>Well-calibrated probabilities match observed frequencies. Use reliability diagrams, Brier score; apply temperature scaling or isotonic regression to fix miscalibration.</p>
+          <pre><code># Temperature scaling (sketch)
+import torch.nn as nn
+class TemperatureScaler(nn.Module):
+  def __init__(self):
+    super().__init__(); self.t = nn.Parameter(torch.ones(()))
+  def forward(self, logits):
+    return logits / self.t.clamp_min(1e-6)
+</code></pre>
+        </section>
+
+        <section id="thresholding">
+          <h2>Thresholding</h2>
+          <p>Choose a decision threshold that optimizes the business-relevant trade-off (e.g., Youden’s J, F1-max, cost-sensitive thresholds). Evaluate stability across datasets.</p>
+          <pre><code># Find F1-max threshold
+import numpy as np
+from sklearn.metrics import f1_score
+
+def best_threshold(y_true, y_score):
+  thresholds = np.linspace(0, 1, 201)
+  scores = [f1_score(y_true, y_score >= t) for t in thresholds]
+  return thresholds[int(np.argmax(scores))]
+</code></pre>
+        </section>
+
+        <div class="course-nav">
+          <a href="05_dataset_split.html">← 5. Dataset Split</a>
+          <a href="07_regularization.html">Next: 7. Regularization →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

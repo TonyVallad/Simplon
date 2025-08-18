@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 5. Dataset Split</title>
+    <meta name="description" content="Why we split data, leakage pitfalls, stratification, group/time-series splits, and cross-validation." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 5. Dataset Split</div>
+        <h1>5. Dataset Split</h1>
+        <p>Honest evaluation requires clean separation. Avoid leakage, stratify, and match your domain constraints.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#why">Why Split?</a></li>
+            <li><a href="#strategies">Split Strategies</a></li>
+            <li><a href="#leakage">Leakage</a></li>
+            <li><a href="#versioning">Versioning</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+        <main class="content">
+          <section id="why">
+            <h2>Why Split?</h2>
+            <p>We estimate generalization to unseen data and tune hyperparameters without bias.</p>
+            <ul>
+              <li><strong>Train</strong>: fit parameters.</li>
+              <li><strong>Validation</strong>: model selection and early stopping.</li>
+              <li><strong>Test</strong>: final unbiased report; use once per dataset.</li>
+            </ul>
+          </section>
+
+          <section id="strategies">
+            <h2>Split Strategies</h2>
+            <ul>
+              <li><strong>Random + stratified</strong> to preserve class ratios.</li>
+              <li><strong>Group-aware</strong> when multiple samples share identity (patient, user, scene).</li>
+              <li><strong>Time-series</strong>: forward-chaining or train-before-test in time.</li>
+              <li><strong>Cross-validation</strong>: k-fold, stratified k-fold, group k-fold for small datasets.</li>
+            </ul>
+            <pre><code># scikit-learn examples
+from sklearn.model_selection import train_test_split, StratifiedKFold, GroupKFold
+
+# Stratified holdout
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+
+# Group-aware (e.g., patient_id groups)
+gkf = GroupKFold(n_splits=5)
+for tr_idx, te_idx in gkf.split(X, y, groups=patient_id):
+    X_tr, X_te = X[tr_idx], X[te_idx]
+    y_tr, y_te = y[tr_idx], y[te_idx]
+
+# Time-series split (sklearn's TimeSeriesSplit or custom by timestamp)
+</code></pre>
+          </section>
+
+          <section id="leakage">
+            <h2>Leakage</h2>
+            <p>Information from validation/test sneaks into training, inflating performance.</p>
+            <ul>
+              <li>Normalize using <em>train-only</em> statistics; fit encoders on train split only.</li>
+              <li>Deduplicate across splits; avoid near-duplicates.</li>
+              <li>Ensure identities (patients/users/scenes) do not span splits.</li>
+              <li>Perform feature selection and hyperparameter tuning strictly inside training folds.</li>
+            </ul>
+            <div class="warning"><strong>Example</strong>: Standardize with <em>fit</em> on train, then <em>transform</em> train/val/test using the same scaler.</div>
+          </section>
+
+          <section id="versioning">
+            <h2>Versioning</h2>
+            <p>Record split indices, seed, and data snapshot. Store alongside model artifacts for reproducibility.</p>
+          </section>
+
+          <div class="course-nav">
+            <a href="04_training_workflow.html">← 4. Training Workflow</a>
+            <a href="06_metrics.html">Next: 6. Metrics →</a>
+          </div>
+        </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

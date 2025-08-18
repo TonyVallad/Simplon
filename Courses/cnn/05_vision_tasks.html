@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CNN – 5. Vision Tasks</title>
+    <meta name="description" content="Classification heads, object detection (Faster R-CNN, RetinaNet), segmentation (U-Net, DeepLab), and evaluation." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">CNN</a> / 5. Vision Tasks</div>
+        <h1>5. Vision Tasks (Cls/Det/Seg)</h1>
+        <p>How to adapt CNNs to common vision tasks and measure performance.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#cls">Classification</a></li>
+            <li><a href="#det">Object Detection</a></li>
+            <li><a href="#seg">Semantic Segmentation</a></li>
+            <li><a href="#eval">Evaluation</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="cls">
+          <h2>Classification</h2>
+          <p>Add a global pooling head and a linear classifier. Use label smoothing and balanced sampling if classes are imbalanced.</p>
+        </section>
+
+        <section id="det">
+          <h2>Object Detection</h2>
+          <ul>
+            <li><strong>Two-stage</strong> (Faster R-CNN): region proposals then classification/regression.</li>
+            <li><strong>One-stage</strong> (RetinaNet/YOLO): directly predict classes and boxes.</li>
+          </ul>
+          <p>Backbone CNN extracts features; FPN adds multi-scale features.</p>
+        </section>
+
+        <section id="seg">
+          <h2>Semantic Segmentation</h2>
+          <p><strong>U-Net</strong>: encoder–decoder with skip connections; <strong>DeepLab</strong>: atrous/dilated convolutions and ASPP for larger context.</p>
+        </section>
+
+        <section id="eval">
+          <h2>Evaluation</h2>
+          <ul>
+            <li>Classification: accuracy, F1, ROC/PR AUC.</li>
+            <li>Detection: mAP across IoU thresholds; per-class AP.</li>
+            <li>Segmentation: IoU/Jaccard, Dice, per-class metrics.</li>
+          </ul>
+        </section>
+
+        <div class="course-nav">
+          <a href="04_training_recipes.html">← 4. Training Recipes</a>
+          <a href="06_pytorch_practice.html">Next: 6. PyTorch Practice →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

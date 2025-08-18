@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 2. Types of Neural Networks</title>
+    <meta name="description" content="MLP, CNN, RNN/LSTM/GRU, Transformers, GNN, Autoencoders, GANs: what they are, benefits, limitations, and when to use." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 2. Types of Neural Networks</div>
+        <h1>2. Types of Neural Networks</h1>
+        <p>Choosing the right architecture gives your model a head start by matching the structure of the data.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#mlp">MLP</a></li>
+            <li><a href="#cnn">CNN</a></li>
+            <li><a href="#rnn">RNN/LSTM/GRU</a></li>
+            <li><a href="#transformers">Transformers</a></li>
+            <li><a href="#gnn">GNN</a></li>
+            <li><a href="#autoencoders">Autoencoders</a></li>
+            <li><a href="#gans">GANs</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="mlp">
+          <h2>Multilayer Perceptron (MLP)</h2>
+          <div class="grid-2">
+            <div>
+              <p>Fully connected layers; universal approximators of continuous functions with enough width. Best for tabular or vector inputs without explicit spatial/temporal structure.</p>
+              <ul>
+                <li><strong>Strengths</strong>: simple, fast to iterate; strong on tabular with good features.</li>
+                <li><strong>Limitations</strong>: parameter heavy for high-dimensional inputs; ignores locality and order.</li>
+                <li><strong>Typical uses</strong>: credit risk, churn prediction, structured data tasks.</li>
+                <li><strong>Example</strong>: 3-layer MLP for tabular classification: Dense(128) → ReLU → Dense(64) → ReLU → Dense(C).</li>
+              </ul>
+            </div>
+            <figure>
+              <svg viewBox="0 0 520 220" width="100%" height="220" role="img" aria-label="MLP diagram">
+                <defs>
+                  <marker id="arrA" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+                  </marker>
+                </defs>
+                <g fill="none" stroke="currentColor" stroke-width="1.5">
+                  <g>
+                    <circle cx="60" cy="40" r="10" />
+                    <circle cx="60" cy="90" r="10" />
+                    <circle cx="60" cy="140" r="10" />
+                    <circle cx="60" cy="190" r="10" />
+                  </g>
+                  <g>
+                    <circle cx="180" cy="40" r="12" />
+                    <circle cx="180" cy="90" r="12" />
+                    <circle cx="180" cy="140" r="12" />
+                    <circle cx="180" cy="190" r="12" />
+                  </g>
+                  <g>
+                    <circle cx="300" cy="60" r="12" />
+                    <circle cx="300" cy="120" r="12" />
+                    <circle cx="300" cy="180" r="12" />
+                  </g>
+                  <g>
+                    <circle cx="440" cy="120" r="14" />
+                  </g>
+                  <g>
+                    <line x1="72" y1="40" x2="168" y2="40" marker-end="url(#arrA)" />
+                    <line x1="72" y1="40" x2="168" y2="90" marker-end="url(#arrA)" />
+                    <line x1="72" y1="40" x2="168" y2="140" marker-end="url(#arrA)" />
+                    <line x1="72" y1="40" x2="168" y2="190" marker-end="url(#arrA)" />
+                    <line x1="72" y1="90" x2="168" y2="40" marker-end="url(#arrA)" />
+                    <line x1="72" y1="90" x2="168" y2="90" marker-end="url(#arrA)" />
+                    <line x1="72" y1="90" x2="168" y2="140" marker-end="url(#arrA)" />
+                    <line x1="72" y1="90" x2="168" y2="190" marker-end="url(#arrA)" />
+                    <line x1="72" y1="140" x2="168" y2="40" marker-end="url(#arrA)" />
+                    <line x1="72" y1="140" x2="168" y2="90" marker-end="url(#arrA)" />
+                    <line x1="72" y1="140" x2="168" y2="140" marker-end="url(#arrA)" />
+                    <line x1="72" y1="140" x2="168" y2="190" marker-end="url(#arrA)" />
+                    <line x1="72" y1="190" x2="168" y2="40" marker-end="url(#arrA)" />
+                    <line x1="72" y1="190" x2="168" y2="90" marker-end="url(#arrA)" />
+                    <line x1="72" y1="190" x2="168" y2="140" marker-end="url(#arrA)" />
+                    <line x1="72" y1="190" x2="168" y2="190" marker-end="url(#arrA)" />
+                    <line x1="192" y1="40" x2="288" y2="60" marker-end="url(#arrA)" />
+                    <line x1="192" y1="90" x2="288" y2="120" marker-end="url(#arrA)" />
+                    <line x1="192" y1="140" x2="288" y2="180" marker-end="url(#arrA)" />
+                    <line x1="312" y1="60" x2="426" y2="120" marker-end="url(#arrA)" />
+                    <line x1="312" y1="120" x2="426" y2="120" marker-end="url(#arrA)" />
+                    <line x1="312" y1="180" x2="426" y2="120" marker-end="url(#arrA)" />
+                  </g>
+                </g>
+              </svg>
+              <figcaption>MLP: capacity grows with width/depth; regularize to prevent overfitting.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="cnn">
+          <h2>Convolutional Neural Networks (CNN)</h2>
+          <div class="grid-2">
+            <div>
+              <p>Convolutions encode spatial locality and translational invariance. Shared kernels scan over inputs to produce feature maps capturing edges, textures, and higher-level patterns.</p>
+              <ul>
+                <li><strong>Strengths</strong>: parameter efficiency; excellent for images and signals.</li>
+                <li><strong>Limitations</strong>: global context requires deeper networks or attention.</li>
+                <li><strong>Tricks</strong>: batch norm + ReLU, residual blocks, depthwise separable convs.</li>
+                <li><strong>Example</strong>: Conv(32, 3×3) → ReLU → Conv(64, 3×3) → ReLU → MaxPool → Dense.</li>
+              </ul>
+            </div>
+            <figure>
+              <svg viewBox="0 0 520 220" width="100%" height="220" role="img" aria-label="Convolution diagram">
+                <g fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="30" y="20" width="160" height="160" rx="4"></rect>
+                  <g stroke="rgba(255,255,255,0.3)">
+                    <line x1="70" y1="20" x2="70" y2="180" />
+                    <line x1="110" y1="20" x2="110" y2="180" />
+                    <line x1="150" y1="20" x2="150" y2="180" />
+                    <line x1="30" y1="60" x2="190" y2="60" />
+                    <line x1="30" y1="100" x2="190" y2="100" />
+                    <line x1="30" y1="140" x2="190" y2="140" />
+                  </g>
+                  <rect x="50" y="40" width="60" height="60" fill="rgba(108,193,255,0.25)" />
+                  <rect x="290" y="60" width="100" height="100" rx="4" />
+                  <g>
+                    <line x1="110" y1="70" x2="290" y2="90" />
+                    <line x1="110" y1="100" x2="290" y2="120" />
+                    <line x1="80" y1="100" x2="290" y2="150" />
+                  </g>
+                </g>
+              </svg>
+              <figcaption>Local filters + shared weights produce translation-equivariant feature maps.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="rnn">
+          <h2>Recurrent Networks (RNN, LSTM, GRU)</h2>
+          <div class="grid-2">
+            <div>
+              <p>Sequence models with recurrent connections carry information across time. LSTM/GRU use gates to preserve long-term dependencies.</p>
+              <ul>
+                <li><strong>Strengths</strong>: effective for moderate-length sequences; compact state.</li>
+                <li><strong>Limitations</strong>: sequential computation limits parallelism; long contexts are hard.</li>
+                <li><strong>Variants</strong>: bidirectional RNNs, stacked layers, attention-augmented.</li>
+                <li><strong>Example</strong>: BiLSTM(128) → Dropout(0.3) → Dense for token/class labeling.</li>
+              </ul>
+            </div>
+            <figure>
+              <svg viewBox="0 0 520 200" width="100%" height="200" role="img" aria-label="RNN unrolled">
+                <defs>
+                  <marker id="arrB" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+                  </marker>
+                </defs>
+                <g fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="60" y="60" width="80" height="60" rx="8" />
+                  <rect x="200" y="60" width="80" height="60" rx="8" />
+                  <rect x="340" y="60" width="80" height="60" rx="8" />
+                  <text x="100" y="95" text-anchor="middle" font-size="12">Cell t</text>
+                  <text x="240" y="95" text-anchor="middle" font-size="12">Cell t+1</text>
+                  <text x="380" y="95" text-anchor="middle" font-size="12">Cell t+2</text>
+                  <line x1="140" y1="90" x2="200" y2="90" marker-end="url(#arrB)" />
+                  <line x1="280" y1="90" x2="340" y2="90" marker-end="url(#arrB)" />
+                </g>
+              </svg>
+              <figcaption>Hidden state forwards information between steps; outputs can be many-to-many/one.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="transformers">
+          <h2>Transformers</h2>
+          <div class="grid-2">
+            <div>
+              <p>Self-attention relates all tokens in a sequence in parallel, enabling long-range dependencies and scalability with modern hardware.</p>
+              <ul>
+                <li><strong>Strengths</strong>: state-of-the-art across NLP, vision, speech; parallelizable.</li>
+                <li><strong>Limitations</strong>: vanilla attention has quadratic cost in sequence length.</li>
+                <li><strong>Patterns</strong>: multi-head attention, residuals + layer norm, feed-forward blocks.</li>
+                <li><strong>Example</strong>: [Embedding] → [Positional] → N×(MH-Attn → FFN) → Pool → Head.</li>
+              </ul>
+            </div>
+            <figure>
+              <svg viewBox="0 0 520 210" width="100%" height="210" role="img" aria-label="Attention block">
+                <g fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="50" y="30" width="120" height="50" rx="8" />
+                  <text x="110" y="60" text-anchor="middle" font-size="12">Q</text>
+                  <rect x="200" y="30" width="120" height="50" rx="8" />
+                  <text x="260" y="60" text-anchor="middle" font-size="12">K</text>
+                  <rect x="350" y="30" width="120" height="50" rx="8" />
+                  <text x="410" y="60" text-anchor="middle" font-size="12">V</text>
+                  <rect x="200" y="120" width="120" height="50" rx="8" />
+                  <text x="260" y="150" text-anchor="middle" font-size="12">Softmax(QKᵀ)</text>
+                  <line x1="110" y1="80" x2="260" y2="120" />
+                  <line x1="260" y1="80" x2="260" y2="120" />
+                  <line x1="260" y1="170" x2="410" y2="80" />
+                  <rect x="410" y="140" width="60" height="40" rx="6" />
+                  <text x="440" y="165" text-anchor="middle" font-size="12">Out</text>
+                </g>
+              </svg>
+              <figcaption>Scaled dot-product attention forms context-aware mixtures of values.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="gnn">
+          <h2>Graph Neural Networks (GNN)</h2>
+          <p>Message passing layers aggregate and transform neighbor features, allowing learning on arbitrary graph structures.</p>
+          <ul>
+            <li><strong>Strengths</strong>: handles non-Euclidean domains (molecules, social, knowledge graphs).</li>
+            <li><strong>Limitations</strong>: over-smoothing in deep stacks; scaling to massive graphs.</li>
+            <li><strong>Example</strong>: GraphConv → ReLU → GraphConv → GlobalPool → Dense.</li>
+          </ul>
+        </section>
+
+        <section id="autoencoders">
+          <h2>Autoencoders</h2>
+          <p>Encoder maps inputs to a low-dimensional latent; decoder reconstructs. Useful for compression, denoising, and anomaly detection. Variational autoencoders (VAE) model a latent distribution.</p>
+          <ul>
+            <li><strong>Example</strong>: Conv → Conv → Bottleneck (z) → Deconv → Deconv → Reconstruction.</li>
+          </ul>
+        </section>
+
+        <section id="gans">
+          <h2>Generative Adversarial Networks (GANs)</h2>
+          <p>Two-player game: generator creates synthetic samples; discriminator distinguishes real vs fake. Training dynamics are delicate but can yield highly realistic outputs.</p>
+          <ul>
+            <li><strong>Example</strong>: DCGAN with transposed convolutions for image synthesis.</li>
+            <li><strong>Tip</strong>: use spectral norm or gradient penalty to stabilize discriminator.</li>
+          </ul>
+        </section>
+
+        <div class="course-nav">
+          <a href="01_introduction.html">← 1. Introduction</a>
+          <a href="03_layers.html">Next: 3. Types of Layers →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 11. Practical Checklist</title>
+    <meta name="description" content="A concise checklist: data, baselines, training hygiene, evaluation, reproducibility." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 11. Practical Checklist</div>
+        <h1>11. Practical Checklist</h1>
+        <p>High-signal steps to avoid common pitfalls.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#data">Data</a></li>
+            <li><a href="#baselines">Baselines</a></li>
+            <li><a href="#train">Training</a></li>
+            <li><a href="#eval">Evaluation</a></li>
+            <li><a href="#repro">Reproducibility</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="data">
+          <h2>Data</h2>
+          <ul>
+            <li>Clean labels; deduplicate; handle missing and outliers.</li>
+            <li>Define stratified/group/time-aware splits; freeze them.</li>
+            <li>Document preprocessing and augmentations.</li>
+          </ul>
+        </section>
+
+        <section id="baselines">
+          <h2>Baselines</h2>
+          <ul>
+            <li>Simple baseline (e.g., logistic regression) for reference.</li>
+            <li>Non-neural baselines for tabular tasks (GBDT) if applicable.</li>
+          </ul>
+        </section>
+
+        <section id="train">
+          <h2>Training</h2>
+          <ul>
+            <li>Run LR range test; set schedule.</li>
+            <li>Use appropriate initialization and normalization.</li>
+            <li>Enable mixed precision; monitor gradient norms.</li>
+            <li>Checkpoint best and last; enable early stopping.</li>
+          </ul>
+        </section>
+
+        <section id="eval">
+          <h2>Evaluation</h2>
+          <ul>
+            <li>Pick metrics aligned with costs; include PR AUC if positives are rare.</li>
+            <li>Plot curves (ROC/PR), calibration, and confusion matrices.</li>
+            <li>Error analysis: slice by cohorts; inspect failure cases.</li>
+          </ul>
+        </section>
+
+        <section id="repro">
+          <h2>Reproducibility</h2>
+          <ul>
+            <li>Fix seeds; log configs, versions, and git commit.</li>
+            <li>Save data split indices and preprocessing artifacts.</li>
+          </ul>
+        </section>
+
+        <div class="course-nav">
+          <a href="10_inference_deployment.html">← 10. Inference & Deployment</a>
+          <a href="12_glossary_references.html">Next: Glossary & References →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

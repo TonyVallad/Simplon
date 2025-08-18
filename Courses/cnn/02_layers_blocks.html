@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CNN – 2. Layers & Blocks</title>
+    <meta name="description" content="Conv, pooling, normalization, activations, residuals; classic and modern CNN blocks." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">CNN</a> / 2. Layers & Blocks</div>
+        <h1>2. Layers & Blocks</h1>
+        <p>From basic layers to widely used CNN blocks.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#conv">Convolution</a></li>
+            <li><a href="#pool">Pooling</a></li>
+            <li><a href="#norm">Normalization</a></li>
+            <li><a href="#act">Activations</a></li>
+            <li><a href="#res">Residual Blocks</a></li>
+            <li><a href="#mobile">Depthwise Separable</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="conv">
+          <h2>Convolution</h2>
+          <pre><code># PyTorch conv block
+import torch.nn as nn
+conv_block = nn.Sequential(
+  nn.Conv2d(64, 64, 3, padding=1), nn.BatchNorm2d(64), nn.ReLU(inplace=True),
+  nn.Conv2d(64, 64, 3, padding=1), nn.BatchNorm2d(64), nn.ReLU(inplace=True)
+)
+</code></pre>
+        </section>
+
+        <section id="pool">
+          <h2>Pooling</h2>
+          <p>Max/Avg pooling reduce spatial size. Global average pooling collapses H×W to 1×1 by averaging.</p>
+          <pre><code>gap = nn.AdaptiveAvgPool2d((1,1))
+</code></pre>
+        </section>
+
+        <section id="norm">
+          <h2>Normalization</h2>
+          <p>BatchNorm is common in CNNs; GroupNorm is batch-size agnostic.</p>
+          <pre><code>bn = nn.BatchNorm2d(64)
+gn = nn.GroupNorm(num_groups=32, num_channels=64)
+</code></pre>
+        </section>
+
+        <section id="act">
+          <h2>Activations</h2>
+          <p>ReLU is the workhorse; SiLU/GELU are smooth alternatives that often improve accuracy.</p>
+        </section>
+
+        <section id="res">
+          <h2>Residual Blocks</h2>
+          <pre><code># Basic ResNet block (sketch)
+class BasicBlock(nn.Module):
+  def __init__(self, c: int):
+    super().__init__()
+    self.conv1 = nn.Conv2d(c, c, 3, padding=1)
+    self.bn1 = nn.BatchNorm2d(c)
+    self.conv2 = nn.Conv2d(c, c, 3, padding=1)
+    self.bn2 = nn.BatchNorm2d(c)
+    self.act = nn.ReLU(inplace=True)
+  def forward(self, x):
+    h = self.act(self.bn1(self.conv1(x)))
+    h = self.bn2(self.conv2(h))
+    return self.act(x + h)
+</code></pre>
+        </section>
+
+        <section id="mobile">
+          <h2>Depthwise Separable</h2>
+          <p>Depthwise conv per channel followed by pointwise 1×1 conv reduces parameters and compute (MobileNet).</p>
+          <pre><code># Depthwise + Pointwise
+dw = nn.Conv2d(64, 64, 3, padding=1, groups=64)
+pw = nn.Conv2d(64, 128, 1)
+</code></pre>
+        </section>
+
+        <div class="course-nav">
+          <a href="01_fundamentals.html">← 1. Fundamentals</a>
+          <a href="03_architectures.html">Next: 3. Architectures →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CNN – 6. PyTorch Practice</title>
+    <meta name="description" content="End-to-end PyTorch example: dataset, model, training loop, evaluation, and saving checkpoints." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">CNN</a> / 6. PyTorch Practice</div>
+        <h1>6. PyTorch Practice</h1>
+        <p>Reference training loop with a small CNN. Adapt as needed for your datasets.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#data">Data</a></li>
+            <li><a href="#model">Model</a></li>
+            <li><a href="#train">Training Loop</a></li>
+            <li><a href="#eval">Evaluation</a></li>
+            <li><a href="#save">Save/Load</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="data">
+          <h2>Data</h2>
+          <pre><code>import torch, torchvision
+import torchvision.transforms as T
+
+tfms = T.Compose([T.Resize(224), T.ToTensor(), T.Normalize(mean, std)])
+train_ds = torchvision.datasets.ImageFolder('data/train', transform=tfms)
+val_ds   = torchvision.datasets.ImageFolder('data/val',   transform=tfms)
+train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=4, pin_memory=True)
+val_loader   = torch.utils.data.DataLoader(val_ds,   batch_size=64, shuffle=False, num_workers=4, pin_memory=True)
+</code></pre>
+        </section>
+
+        <section id="model">
+          <h2>Model</h2>
+          <pre><code>import torch.nn as nn
+class SmallCNN(nn.Module):
+  def __init__(self, num_classes: int):
+    super().__init__()
+    self.features = nn.Sequential(
+      nn.Conv2d(3, 32, 3, padding=1), nn.ReLU(),
+      nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(),
+      nn.MaxPool2d(2),
+      nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(),
+      nn.MaxPool2d(2)
+    )
+    self.head = nn.Sequential(nn.AdaptiveAvgPool2d((1,1)), nn.Flatten(), nn.Linear(128, num_classes))
+  def forward(self, x):
+    return self.head(self.features(x))
+</code></pre>
+        </section>
+
+        <section id="train">
+          <h2>Training Loop</h2>
+          <pre><code>device = 'cuda' if torch.cuda.is_available() else 'cpu'
+model = SmallCNN(num_classes=len(train_ds.classes)).to(device)
+optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=1e-4)
+criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
+
+for epoch in range(20):
+  model.train(); total = correct = 0
+  for x, y in train_loader:
+    x, y = x.to(device), y.to(device)
+    optimizer.zero_grad(set_to_none=True)
+    logits = model(x)
+    loss = criterion(logits, y)
+    loss.backward(); optimizer.step()
+    pred = logits.argmax(dim=1); total += y.size(0); correct += (pred == y).sum().item()
+  train_acc = correct / total
+  print(f'Epoch {epoch}: train_acc={train_acc:.3f}')
+</code></pre>
+        </section>
+
+        <section id="eval">
+          <h2>Evaluation</h2>
+          <pre><code>model.eval(); total = correct = 0
+with torch.no_grad():
+  for x, y in val_loader:
+    x, y = x.to(device), y.to(device)
+    logits = model(x); pred = logits.argmax(dim=1)
+    total += y.size(0); correct += (pred == y).sum().item()
+val_acc = correct / total
+print(f'Val acc: {val_acc:.3f}')
+</code></pre>
+        </section>
+
+        <section id="save">
+          <h2>Save/Load</h2>
+          <pre><code># Save
+torch.save({'model': model.state_dict(), 'classes': train_ds.classes}, 'cnn.pt')
+
+# Load
+ckpt = torch.load('cnn.pt', map_location=device)
+model.load_state_dict(ckpt['model'])
+</code></pre>
+        </section>
+
+        <div class="course-nav">
+          <a href="05_vision_tasks.html">← 5. Vision Tasks</a>
+          <a href="07_inference_optimization.html">Next: 7. Inference & Optimization →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

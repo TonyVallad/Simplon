@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CNN – 7. Inference & Optimization</title>
+    <meta name="description" content="Export, quantization, pruning, distillation, batching, and serving considerations for CNNs." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">CNN</a> / 7. Inference & Optimization</div>
+        <h1>7. Inference & Optimization</h1>
+        <p>Make CNNs fast, small, and reliable for deployment.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#export">Export</a></li>
+            <li><a href="#quant">Quantization</a></li>
+            <li><a href="#prune">Pruning</a></li>
+            <li><a href="#distill">Distillation</a></li>
+            <li><a href="#serve">Serving</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="export">
+          <h2>Export</h2>
+          <p>Export to ONNX or TorchScript to run on different runtimes and hardware.</p>
+        </section>
+
+        <section id="quant">
+          <h2>Quantization</h2>
+          <p>Use dynamic or static quantization to reduce model size and improve latency. Calibration data is needed for static quantization.</p>
+        </section>
+
+        <section id="prune">
+          <h2>Pruning</h2>
+          <p>Remove unimportant weights or channels; fine-tune afterward to recover accuracy.</p>
+        </section>
+
+        <section id="distill">
+          <h2>Distillation</h2>
+          <p>Train a smaller student model using soft targets from a larger teacher.</p>
+        </section>
+
+        <section id="serve">
+          <h2>Serving</h2>
+          <ul>
+            <li>Batch for throughput vs latency trade-offs.</li>
+            <li>Cache preprocessed inputs and frequent results.</li>
+            <li>Monitor drift and performance; add canaries for safe rollouts.</li>
+          </ul>
+        </section>
+
+        <div class="course-nav">
+          <a href="06_pytorch_practice.html">← 6. PyTorch Practice</a>
+          <a href="08_troubleshooting.html">Next: 8. Troubleshooting →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

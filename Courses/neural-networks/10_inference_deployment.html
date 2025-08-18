@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 10. Inference & Deployment</title>
+    <meta name="description" content="Exporting, optimization, monitoring, safety, and reliability in production." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 10. Inference & Deployment</div>
+        <h1>10. Inference & Deployment</h1>
+        <p>From trained weights to reliable production systems.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#export">Export</a></li>
+            <li><a href="#opt">Optimization</a></li>
+            <li><a href="#scaling">Scaling</a></li>
+            <li><a href="#monitoring">Monitoring</a></li>
+            <li><a href="#safety">Safety</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="export">
+          <h2>Export</h2>
+          <p>Use ONNX or TorchScript for portability. Bundle model version, preprocessing, and expected input shapes.</p>
+        </section>
+
+        <section id="opt">
+          <h2>Optimization</h2>
+          <ul>
+            <li><strong>Quantization</strong>: INT8/FP16 for latency and memory.</li>
+            <li><strong>Pruning</strong>: remove redundant weights/channels.</li>
+            <li><strong>Distillation</strong>: train a smaller student from a large teacher.</li>
+          </ul>
+        </section>
+
+        <section id="scaling">
+          <h2>Scaling</h2>
+          <p>Autoscale serving; pick batch size for throughput vs latency. Cache frequent requests. Use A/B or shadow deployments for safe rollouts.</p>
+        </section>
+
+        <section id="monitoring">
+          <h2>Monitoring</h2>
+          <ul>
+            <li>Track latency, error rates, and resource usage.</li>
+            <li>Detect data and concept drift; retrain as needed.</li>
+            <li>Set up alerting on KPI degradations.</li>
+          </ul>
+        </section>
+
+        <section id="safety">
+          <h2>Safety & Reliability</h2>
+          <ul>
+            <li>Validate and sanitize inputs; enforce size/range limits.</li>
+            <li>Add canaries and circuit breakers; timeouts and retries.</li>
+            <li>Handle PII securely; audit and version models.</li>
+          </ul>
+        </section>
+
+        <div class="course-nav">
+          <a href="09_hyperparameters.html">← 9. Hyperparameter Tuning</a>
+          <a href="11_practical_checklist.html">Next: 11. Practical Checklist →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

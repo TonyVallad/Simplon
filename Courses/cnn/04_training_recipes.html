@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CNN – 4. Training Recipes</title>
+    <meta name="description" content="Data augmentation, optimizers, schedules, regularization, mixed precision, and checkpoints for CNNs." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">CNN</a> / 4. Training Recipes</div>
+        <h1>4. Training Recipes</h1>
+        <p>Battle-tested defaults to train CNNs effectively.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#aug">Augmentations</a></li>
+            <li><a href="#opt">Optimizers & Schedules</a></li>
+            <li><a href="#reg">Regularization</a></li>
+            <li><a href="#amp">Mixed Precision</a></li>
+            <li><a href="#ckpt">Checkpoints</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="aug">
+          <h2>Augmentations</h2>
+          <ul>
+            <li>RandomCrop/Resize, Flip, ColorJitter for classification.</li>
+            <li>RandAugment/AutoAugment; MixUp/CutMix for regularization.</li>
+            <li>Normalization: mean/std per dataset (e.g., ImageNet).</li>
+          </ul>
+          <pre><code>import torchvision.transforms as T
+train_tfms = T.Compose([
+  T.RandomResizedCrop(224), T.RandomHorizontalFlip(),
+  T.ColorJitter(0.2,0.2,0.2,0.1),
+  T.ToTensor(), T.Normalize(mean, std)
+])
+</code></pre>
+        </section>
+
+        <section id="opt">
+          <h2>Optimizers & Schedules</h2>
+          <p>AdamW or SGD+momentum with cosine decay and warmup are strong defaults.</p>
+          <pre><code>optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=1e-4)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+</code></pre>
+        </section>
+
+        <section id="reg">
+          <h2>Regularization</h2>
+          <ul>
+            <li>Weight decay; label smoothing (e.g., 0.1) for classification.</li>
+            <li>Stochastic depth / DropPath in deep residual nets.</li>
+          </ul>
+        </section>
+
+        <section id="amp">
+          <h2>Mixed Precision</h2>
+          <p>Use AMP to speed training and reduce memory; keep numerically sensitive ops in FP32 if needed.</p>
+        </section>
+
+        <section id="ckpt">
+          <h2>Checkpoints</h2>
+          <p>Save best-by-metric and latest; include optimizer/scheduler state, epoch, seeds, and config.</p>
+        </section>
+
+        <div class="course-nav">
+          <a href="03_architectures.html">← 3. Architectures</a>
+          <a href="05_vision_tasks.html">Next: 5. Vision Tasks →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

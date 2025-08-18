@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 3. Types of Layers</title>
+    <meta name="description" content="Dense, convolutional, pooling, recurrent, normalization, dropout, attention, embedding, residual and more." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 3. Types of Layers</div>
+        <h1>3. Types of Layers</h1>
+        <p>Understand the building blocks: what they do, how they work, and when to use them.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#dense">Dense</a></li>
+            <li><a href="#conv">Convolution</a></li>
+            <li><a href="#pool">Pooling</a></li>
+            <li><a href="#recurrent">Recurrent</a></li>
+            <li><a href="#norm">Normalization</a></li>
+            <li><a href="#dropout">Dropout</a></li>
+            <li><a href="#attention">Attention</a></li>
+            <li><a href="#embedding">Embedding</a></li>
+            <li><a href="#residual">Residual</a></li>
+            <li><a href="#activations">Activations</a></li>
+            <li><a href="#positional">Positional Encoding</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="dense">
+          <h2>Dense</h2>
+          <p>Applies an affine transform y = Wx + b, followed by an activation. Parameter count equals inputs × outputs + outputs.</p>
+          <ul>
+            <li><strong>Use</strong>: tabular, output heads, feature projections.</li>
+            <li><strong>Pitfalls</strong>: large matrices → overfitting; mitigate with dropout/regularization.</li>
+          </ul>
+          <pre><code># PyTorch: a simple dense block
+import torch.nn as nn
+dense_block = nn.Sequential(
+  nn.Linear(128, 256), nn.ReLU(), nn.Dropout(0.2),
+  nn.Linear(256, 64), nn.ReLU()
+)
+</code></pre>
+        </section>
+
+        <section id="conv">
+          <h2>Convolution</h2>
+          <p>Local receptive fields with shared weights. Hyperparameters: kernel size, stride, padding, dilation, filters.</p>
+          <div class="grid-3">
+            <div class="card"><h3>Standard</h3><p>Kernel spans all input channels; outputs sum channel-wise responses.</p></div>
+            <div class="card"><h3>Depthwise separable</h3><p>Depthwise conv per channel + pointwise 1×1 conv; parameter-efficient.</p></div>
+            <div class="card"><h3>Dilated</h3><p>Spaces kernel taps to enlarge receptive field without pooling.</p></div>
+          </div>
+          <pre><code># PyTorch: a small CNN stem
+cnn = nn.Sequential(
+  nn.Conv2d(3, 32, kernel_size=3, padding=1), nn.ReLU(),
+  nn.Conv2d(32, 64, kernel_size=3, padding=1), nn.ReLU(),
+  nn.MaxPool2d(2)
+)
+</code></pre>
+        </section>
+
+        <section id="pool">
+          <h2>Pooling</h2>
+          <p>Downsamples features by aggregating neighborhoods. Max pooling retains strongest responses; average pooling smooths.</p>
+        </section>
+
+        <section id="recurrent">
+          <h2>Recurrent</h2>
+          <p>RNN, LSTM, GRU maintain hidden state hₜ. LSTM gates (input/forget/output) control information flow; GRU simplifies with update/reset gates.</p>
+          <pre><code># PyTorch: bidirectional GRU
+rnn = nn.GRU(input_size=128, hidden_size=64, num_layers=2, batch_first=True, bidirectional=True)
+</code></pre>
+        </section>
+
+        <section id="norm">
+          <h2>Normalization</h2>
+          <ul>
+            <li><strong>BatchNorm</strong>: stabilize and speed training; depends on batch statistics.</li>
+            <li><strong>LayerNorm</strong>: per example; common in transformers; batch-size agnostic.</li>
+            <li><strong>Group/InstanceNorm</strong>: helpful for style transfer, small-batch conv-nets.</li>
+          </ul>
+          <pre><code># PyTorch: BatchNorm and LayerNorm examples
+bn = nn.BatchNorm2d(num_features=64)
+ln = nn.LayerNorm(normalized_shape=128)
+</code></pre>
+        </section>
+
+        <section id="dropout">
+          <h2>Dropout</h2>
+          <p>Randomly zero activations at training; scales activations at inference. Reduces co-adaptation and overfitting.</p>
+        </section>
+
+        <section id="attention">
+          <h2>Attention</h2>
+          <p>Computes weights from queries and keys, and mixes values accordingly. Multi-head attention attends to different subspaces.</p>
+          <pre><code># PyTorch: MultiheadAttention (sequence length L, embedding d)
+attn = nn.MultiheadAttention(embed_dim=256, num_heads=4, batch_first=True)
+context, weights = attn(query=X, key=X, value=X)
+</code></pre>
+        </section>
+
+        <section id="embedding">
+          <h2>Embedding</h2>
+          <p>Learned lookup table mapping discrete IDs to dense vectors. For NLP tokens, categories, or user/item IDs.</p>
+          <pre><code># PyTorch: token embedding
+embed = nn.Embedding(num_embeddings=vocab_size, embedding_dim=256)
+X_emb = embed(X_token_ids)
+</code></pre>
+        </section>
+
+        <section id="residual">
+          <h2>Residual</h2>
+          <p>Skip connections add input to output of a block, improving gradient flow and enabling very deep architectures.</p>
+          <pre><code># PyTorch: a simple residual block
+class ResBlock(nn.Module):
+  def __init__(self, d: int):
+    super().__init__()
+    self.net = nn.Sequential(nn.Linear(d, d), nn.ReLU(), nn.Linear(d, d))
+    self.act = nn.ReLU()
+  def forward(self, x):
+    return self.act(x + self.net(x))
+</code></pre>
+        </section>
+
+        <section id="activations">
+          <h2>Activations</h2>
+          <ul>
+            <li><strong>ReLU</strong>: fast, sparse activations; can "die" with large negative inputs.</li>
+            <li><strong>Leaky ReLU</strong> / <strong>PReLU</strong>: mitigate dead neurons with small negative slope.</li>
+            <li><strong>GELU</strong> / <strong>SiLU</strong>: smooth; commonly used in transformers/CNNs.</li>
+          </ul>
+        </section>
+
+        <section id="positional">
+          <h2>Positional Encoding</h2>
+          <p>Transformers lack recurrence/convolution; add position information via sinusoidal or learned encodings to preserve order.</p>
+        </section>
+
+        <div class="course-nav">
+          <a href="02_network_types.html">← 2. Types of Neural Networks</a>
+          <a href="04_training_workflow.html">Next: 4. Training Workflow →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

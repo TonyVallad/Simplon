@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 7. Regularization</title>
+    <meta name="description" content="Early stopping, weight decay, dropout, augmentation, ensembling, cross-validation." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 7. Regularization</div>
+        <h1>7. Regularization & Generalization</h1>
+        <p>Prevent overfitting and improve robustness.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#early">Early Stopping</a></li>
+            <li><a href="#wd">Weight Decay</a></li>
+            <li><a href="#dropout">Dropout</a></li>
+            <li><a href="#augment">Data Augmentation</a></li>
+            <li><a href="#ensembling">Ensembling</a></li>
+            <li><a href="#cv">Cross-Validation</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="early">
+          <h2>Early Stopping</h2>
+          <p>Monitor validation loss/metric and stop when it stops improving for N epochs (patience). Keep the best checkpoint.</p>
+        </section>
+
+        <section id="wd">
+          <h2>Weight Decay</h2>
+          <p>Penalize large weights (L2). Use AdamW to decouple weight decay from adaptive moments.</p>
+        </section>
+
+        <section id="dropout">
+          <h2>Dropout</h2>
+          <p>Randomly zero units during training. Tune rate (e.g., 0.1–0.5). Consider SpatialDropout for CNNs.</p>
+        </section>
+
+        <section id="augment">
+          <h2>Data Augmentation</h2>
+          <ul>
+            <li><strong>Images</strong>: flip, crop, color jitter, MixUp, CutMix.</li>
+            <li><strong>Text</strong>: dropout, synonym replacement, back-translation (task-dependent).</li>
+            <li><strong>Time series</strong>: jitter, windowing, time-warping; preserve temporal semantics.</li>
+          </ul>
+        </section>
+
+        <section id="ensembling">
+          <h2>Ensembling</h2>
+          <p>Average predictions from diverse models or checkpoints to improve stability and accuracy.</p>
+        </section>
+
+        <section id="cv">
+          <h2>Cross-Validation</h2>
+          <p>Use k-fold/group k-fold when data is scarce or split-induced variance is high. Report mean ± std across folds.</p>
+        </section>
+
+        <div class="course-nav">
+          <a href="06_metrics.html">← 6. Metrics</a>
+          <a href="08_optimization.html">Next: 8. Optimization →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

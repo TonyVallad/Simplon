@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CNN – 3. Architectures</title>
+    <meta name="description" content="LeNet, AlexNet, VGG, ResNet, DenseNet, Inception, MobileNet/EfficientNet: patterns and trade-offs." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">CNN</a> / 3. Architectures</div>
+        <h1>3. Architectures</h1>
+        <p>Historical evolution and modern design patterns.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#classic">Classic CNNs</a></li>
+            <li><a href="#residual">Residual & Dense</a></li>
+            <li><a href="#inception">Inception</a></li>
+            <li><a href="#mobile">Mobile/Efficient</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="classic">
+          <h2>Classic CNNs</h2>
+          <ul>
+            <li><strong>LeNet-5</strong>: early conv-pool stacks; tanh activations.</li>
+            <li><strong>AlexNet</strong>: ReLU, dropout, data augmentation; breakthrough on ImageNet.</li>
+            <li><strong>VGG</strong>: deep stacks of 3×3 conv; simplicity at the cost of parameters.</li>
+          </ul>
+        </section>
+
+        <section id="residual">
+          <h2>Residual & Dense</h2>
+          <p><strong>ResNet</strong> uses identity shortcuts to enable very deep networks. <strong>DenseNet</strong> concatenates features from all previous layers within a block, improving feature reuse and efficiency.</p>
+        </section>
+
+        <section id="inception">
+          <h2>Inception</h2>
+          <p>Parallel branches with different kernel sizes plus 1×1 bottlenecks to reduce compute while capturing multi-scale features.</p>
+        </section>
+
+        <section id="mobile">
+          <h2>Mobile/Efficient</h2>
+          <p><strong>MobileNet</strong> uses depthwise separable convolutions; <strong>EfficientNet</strong> scales depth/width/resolution with a compound coefficient.</p>
+        </section>
+
+        <div class="course-nav">
+          <a href="02_layers_blocks.html">← 2. Layers & Blocks</a>
+          <a href="04_training_recipes.html">Next: 4. Training Recipes →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

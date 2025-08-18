@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – A Practical, Visual Course</title>
+    <meta name="description" content="An easy-to-understand, comprehensive tutorial on neural networks with visual diagrams and practical guidance." />
+    <style>
+      :root {
+        --bg: #0b0c10;
+        --panel: #12141a;
+        --subtle: #232735;
+        --text: #e6e6e6;
+        --muted: #b7c0cd;
+        --accent: #6cc1ff;
+        --accent-2: #ffd166;
+        --ok: #6ee7b7;
+        --warn: #fca5a5;
+        --link: #8ab4f8;
+        --code-bg: #0f1323;
+        --border: #2b3143;
+        --shadow: 0 6px 30px rgba(0,0,0,0.25);
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #ffffff;
+          --panel: #ffffff;
+          --subtle: #f4f6fb;
+          --text: #1d2433;
+          --muted: #4b5563;
+          --accent: #0066cc;
+          --accent-2: #a16207;
+          --ok: #059669;
+          --warn: #dc2626;
+          --link: #0054aa;
+          --code-bg: #f7fafc;
+          --border: #e5e7eb;
+          --shadow: 0 6px 24px rgba(0,0,0,0.08);
+        }
+      }
+
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: linear-gradient(180deg, var(--bg), var(--panel));
+      }
+
+      a { color: var(--link); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 24px;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      @media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
+
+      .toc {
+        position: sticky;
+        top: 16px;
+        align-self: start;
+        background: var(--subtle);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: var(--shadow);
+      }
+      .toc h2 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+      }
+      .toc nav ul { list-style: none; padding: 0; margin: 0; }
+      .toc nav li { margin: 6px 0; }
+      .toc nav li ul { margin-left: 16px; }
+
+      header.hero {
+        grid-column: 1 / -1;
+        background: radial-gradient(1200px 400px at 50% -50%, rgba(108,193,255,0.25), transparent), var(--subtle);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px 28px 18px 28px;
+        box-shadow: var(--shadow);
+      }
+      header.hero h1 { margin: 0 0 8px 0; font-size: 32px; letter-spacing: 0.2px; }
+      header.hero p { margin: 0; color: var(--muted); }
+
+      main.content {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+      section { padding: 10px 0 28px 0; border-bottom: 1px dashed var(--border); }
+      section:last-child { border-bottom: 0; }
+      h2 { font-size: 26px; margin: 8px 0 10px 0; }
+      h3 { font-size: 20px; margin: 18px 0 8px 0; }
+      p { line-height: 1.65; }
+      ul { line-height: 1.6; }
+
+      .callout {
+        background: linear-gradient(180deg, rgba(108,193,255,0.12), transparent);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin: 12px 0;
+      }
+
+      .grid-2 {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+      }
+      @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+      figure { margin: 12px 0; background: var(--subtle); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+      figure figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+      .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background: var(--code-bg); border: 1px solid var(--border); padding: 2px 6px; border-radius: 6px; }
+      code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+      pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; overflow: auto; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+      th { background: rgba(255,255,255,0.03); }
+
+      .badge { display: inline-block; padding: 2px 8px; font-size: 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--subtle); color: var(--muted); }
+      .ok { color: var(--ok); }
+      .warn { color: var(--warn); }
+
+      .small { font-size: 14px; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <h1>Neural Networks – A Practical, Visual Course</h1>
+        <p>What they are, why they work, where to use them, and how to measure success. With friendly visuals.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>Contents</h2>
+        <nav>
+          <ul>
+            <li><a href="#intro">1. Introduction</a></li>
+            <li>
+              <a href="#types">2. Types of Neural Networks</a>
+              <ul>
+                <li><a href="#mlp">2.1 Multilayer Perceptron (MLP)</a></li>
+                <li><a href="#cnn">2.2 Convolutional Neural Networks (CNN)</a></li>
+                <li><a href="#rnn">2.3 Recurrent Networks (RNN/LSTM/GRU)</a></li>
+                <li><a href="#transformers">2.4 Transformers</a></li>
+                <li><a href="#gnn">2.5 Graph Neural Networks (GNN)</a></li>
+                <li><a href="#autoencoders">2.6 Autoencoders</a></li>
+                <li><a href="#gans">2.7 GANs</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#layers">3. Types of Layers</a>
+              <ul>
+                <li><a href="#dense">Dense</a>, <a href="#conv">Convolution</a>, <a href="#pool">Pooling</a></li>
+                <li><a href="#recurrent">Recurrent</a>, <a href="#norm">Normalization</a>, <a href="#dropout">Dropout</a></li>
+                <li><a href="#attention">Attention</a>, <a href="#embedding">Embedding</a>, <a href="#residual">Residual</a></li>
+              </ul>
+            </li>
+            <li><a href="#training">4. Training Workflow</a></li>
+            <li><a href="#dataset-split">5. Dataset Split</a></li>
+            <li><a href="#metrics">6. Metrics</a></li>
+            <li><a href="#regularization">7. Regularization & Generalization</a></li>
+            <li><a href="#optimization">8. Optimization Algorithms</a></li>
+            <li><a href="#tuning">9. Hyperparameter Tuning</a></li>
+            <li><a href="#deployment">10. Inference & Deployment</a></li>
+            <li><a href="#checklist">11. Practical Checklist</a></li>
+            <li><a href="#glossary">Glossary</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="intro">
+          <h2>1. Introduction</h2>
+          <p>
+            A neural network is a function approximator built from simple units (neurons) arranged in layers. Each neuron applies a
+            weighted sum to its inputs plus a non-linear activation. By stacking many layers, the network can represent highly complex
+            relationships between inputs and outputs.
+          </p>
+          <div class="grid-2">
+            <figure>
+              <svg viewBox="0 0 500 220" width="100%" height="220" role="img" aria-label="Perceptron diagram">
+                <defs>
+                  <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+                  </marker>
+                </defs>
+                <g fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="90" cy="40" r="18" fill="none" />
+                  <circle cx="90" cy="110" r="18" fill="none" />
+                  <circle cx="90" cy="180" r="18" fill="none" />
+                  <text x="90" y="45" text-anchor="middle" font-size="12">x₁</text>
+                  <text x="90" y="115" text-anchor="middle" font-size="12">x₂</text>
+                  <text x="90" y="185" text-anchor="middle" font-size="12">x₃</text>
+
+                  <circle cx="240" cy="110" r="28" />
+                  <text x="240" y="115" text-anchor="middle" font-size="12">∑ + b</text>
+
+                  <line x1="108" y1="40" x2="212" y2="96" marker-end="url(#arrow)" />
+                  <line x1="108" y1="110" x2="212" y2="110" marker-end="url(#arrow)" />
+                  <line x1="108" y1="180" x2="212" y2="124" marker-end="url(#arrow)" />
+                  <text x="160" y="76" font-size="12">w₁</text>
+                  <text x="160" y="106" font-size="12">w₂</text>
+                  <text x="160" y="136" font-size="12">w₃</text>
+
+                  <rect x="300" y="86" width="60" height="48" rx="6" />
+                  <text x="330" y="115" text-anchor="middle" font-size="12">σ</text>
+                  <line x1="268" y1="110" x2="300" y2="110" marker-end="url(#arrow)" />
+                  <line x1="360" y1="110" x2="420" y2="110" marker-end="url(#arrow)" />
+                  <circle cx="430" cy="110" r="10" />
+                  <text x="430" y="115" text-anchor="middle" font-size="12">ŷ</text>
+                </g>
+              </svg>
+              <figcaption>Single neuron (perceptron): weighted sum + bias, passed through an activation σ to produce prediction ŷ.</figcaption>
+            </figure>
+
+            <div>
+              <div class="callout">
+                <strong>Key idea:</strong> Learning adjusts weights and biases to reduce a loss function on data.
+              </div>
+              <ul>
+                <li><strong>Strengths</strong>: flexible, scalable, state-of-the-art in many tasks.</li>
+                <li><strong>Limitations</strong>: data-hungry, can be brittle, hard to interpret without tools.</li>
+                <li><strong>Use cases</strong>: vision, NLP, tabular, recommendation, time-series, control.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="types">
+          <h2>2. Types of Neural Networks</h2>
+          <p>Architectures shape what a network can easily learn. Choose the inductive bias that matches your data.</p>
+
+          <section id="mlp">
+            <h3>2.1 Multilayer Perceptron (MLP)</h3>
+            <div class="grid-2">
+              <div>
+                <p>Stacks of fully-connected layers. Great for tabular data and simple signals.</p>
+                <ul>
+                  <li><strong>Good at</strong>: learning non-linear functions on vector inputs.</li>
+                  <li><strong>Less good at</strong>: exploiting spatial/temporal structure without feature engineering.</li>
+                </ul>
+              </div>
+              <figure>
+                <svg viewBox="0 0 520 220" width="100%" height="220" role="img" aria-label="MLP diagram">
+                  <defs>
+                    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto" markerUnits="strokeWidth">
+                      <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+                    </marker>
+                  </defs>
+                  <g fill="none" stroke="currentColor" stroke-width="1.5">
+                    <g id="layer1">
+                      <circle cx="60" cy="40" r="10" />
+                      <circle cx="60" cy="90" r="10" />
+                      <circle cx="60" cy="140" r="10" />
+                      <circle cx="60" cy="190" r="10" />
+                    </g>
+                    <g id="layer2">
+                      <circle cx="180" cy="40" r="12" />
+                      <circle cx="180" cy="90" r="12" />
+                      <circle cx="180" cy="140" r="12" />
+                      <circle cx="180" cy="190" r="12" />
+                    </g>
+                    <g id="layer3">
+                      <circle cx="300" cy="60" r="12" />
+                      <circle cx="300" cy="120" r="12" />
+                      <circle cx="300" cy="180" r="12" />
+                    </g>
+                    <g id="out">
+                      <circle cx="440" cy="120" r="14" />
+                    </g>
+                    <g>
+                      <line x1="72" y1="40" x2="168" y2="40" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="40" x2="168" y2="90" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="40" x2="168" y2="140" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="40" x2="168" y2="190" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="90" x2="168" y2="40" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="90" x2="168" y2="90" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="90" x2="168" y2="140" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="90" x2="168" y2="190" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="140" x2="168" y2="40" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="140" x2="168" y2="90" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="140" x2="168" y2="140" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="140" x2="168" y2="190" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="190" x2="168" y2="40" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="190" x2="168" y2="90" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="190" x2="168" y2="140" marker-end="url(#arrow2)" />
+                      <line x1="72" y1="190" x2="168" y2="190" marker-end="url(#arrow2)" />
+
+                      <line x1="192" y1="40" x2="288" y2="60" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="40" x2="288" y2="120" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="40" x2="288" y2="180" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="90" x2="288" y2="60" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="90" x2="288" y2="120" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="90" x2="288" y2="180" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="140" x2="288" y2="60" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="140" x2="288" y2="120" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="140" x2="288" y2="180" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="190" x2="288" y2="60" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="190" x2="288" y2="120" marker-end="url(#arrow2)" />
+                      <line x1="192" y1="190" x2="288" y2="180" marker-end="url(#arrow2)" />
+
+                      <line x1="312" y1="60" x2="426" y2="120" marker-end="url(#arrow2)" />
+                      <line x1="312" y1="120" x2="426" y2="120" marker-end="url(#arrow2)" />
+                      <line x1="312" y1="180" x2="426" y2="120" marker-end="url(#arrow2)" />
+                    </g>
+                  </g>
+                </svg>
+                <figcaption>MLP: fully connected layers learn complex non-linear maps on vector inputs.</figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <section id="cnn">
+            <h3>2.2 Convolutional Neural Networks (CNN)</h3>
+            <div class="grid-2">
+              <div>
+                <p>Use convolutional filters to exploit spatial locality and translation invariance in images and signals.</p>
+                <ul>
+                  <li><strong>Good at</strong>: images, video, audio spectrograms.</li>
+                  <li><strong>Benefits</strong>: fewer parameters than dense, shared weights, local receptive fields.</li>
+                  <li><strong>Limitations</strong>: limited global context unless deep/wide; less natural for non-grid data.</li>
+                </ul>
+              </div>
+              <figure>
+                <svg viewBox="0 0 520 220" width="100%" height="220" role="img" aria-label="Convolution diagram">
+                  <g fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="30" y="20" width="160" height="160" rx="4"></rect>
+                    <g stroke="rgba(255,255,255,0.3)">
+                      <line x1="70" y1="20" x2="70" y2="180" />
+                      <line x1="110" y1="20" x2="110" y2="180" />
+                      <line x1="150" y1="20" x2="150" y2="180" />
+                      <line x1="30" y1="60" x2="190" y2="60" />
+                      <line x1="30" y1="100" x2="190" y2="100" />
+                      <line x1="30" y1="140" x2="190" y2="140" />
+                    </g>
+                    <rect x="50" y="40" width="60" height="60" fill="rgba(108,193,255,0.25)" />
+                    <rect x="290" y="60" width="100" height="100" rx="4" />
+                    <g>
+                      <line x1="110" y1="70" x2="290" y2="90" />
+                      <line x1="110" y1="100" x2="290" y2="120" />
+                      <line x1="80" y1="100" x2="290" y2="150" />
+                    </g>
+                  </g>
+                </svg>
+                <figcaption>Small filter slides across the image, producing an activation map (feature map).</figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <section id="rnn">
+            <h3>2.3 Recurrent Networks (RNN, LSTM, GRU)</h3>
+            <div class="grid-2">
+              <div>
+                <p>Process sequences step-by-step, carrying state through time.</p>
+                <ul>
+                  <li><strong>Good at</strong>: time-series, sequential text/audio, small to medium contexts.</li>
+                  <li><strong>Limitations</strong>: vanishing/exploding gradients, sequential processing limits parallelism.</li>
+                </ul>
+              </div>
+              <figure>
+                <svg viewBox="0 0 520 200" width="100%" height="200" role="img" aria-label="RNN unrolled">
+                  <defs>
+                    <marker id="arrow3" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto" markerUnits="strokeWidth">
+                      <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+                    </marker>
+                  </defs>
+                  <g fill="none" stroke="currentColor" stroke-width="1.6">
+                    <rect x="60" y="60" width="80" height="60" rx="8" />
+                    <rect x="200" y="60" width="80" height="60" rx="8" />
+                    <rect x="340" y="60" width="80" height="60" rx="8" />
+                    <text x="100" y="95" text-anchor="middle" font-size="12">Cell t</text>
+                    <text x="240" y="95" text-anchor="middle" font-size="12">Cell t+1</text>
+                    <text x="380" y="95" text-anchor="middle" font-size="12">Cell t+2</text>
+                    <line x1="140" y1="90" x2="200" y2="90" marker-end="url(#arrow3)" />
+                    <line x1="280" y1="90" x2="340" y2="90" marker-end="url(#arrow3)" />
+                    <line x1="60" y1="40" x2="80" y2="60" marker-end="url(#arrow3)" />
+                    <line x1="200" y1="40" x2="220" y2="60" marker-end="url(#arrow3)" />
+                    <line x1="340" y1="40" x2="360" y2="60" marker-end="url(#arrow3)" />
+                    <line x1="140" y1="120" x2="160" y2="140" marker-end="url(#arrow3)" />
+                    <line x1="280" y1="120" x2="300" y2="140" marker-end="url(#arrow3)" />
+                    <line x1="420" y1="120" x2="440" y2="140" marker-end="url(#arrow3)" />
+                  </g>
+                </svg>
+                <figcaption>RNN unrolled through time: hidden state flows between time steps.</figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <section id="transformers">
+            <h3>2.4 Transformers</h3>
+            <div class="grid-2">
+              <div>
+                <p>Use attention to relate all positions in a sequence in parallel, enabling long-range dependencies.</p>
+                <ul>
+                  <li><strong>Good at</strong>: NLP, vision, speech, multi-modal; large-scale pretraining.</li>
+                  <li><strong>Limitations</strong>: quadratic attention cost with sequence length (for vanilla attention).</li>
+                </ul>
+              </div>
+              <figure>
+                <svg viewBox="0 0 520 210" width="100%" height="210" role="img" aria-label="Attention block">
+                  <g fill="none" stroke="currentColor" stroke-width="1.6">
+                    <rect x="50" y="30" width="120" height="50" rx="8" />
+                    <text x="110" y="60" text-anchor="middle" font-size="12">Q</text>
+                    <rect x="200" y="30" width="120" height="50" rx="8" />
+                    <text x="260" y="60" text-anchor="middle" font-size="12">K</text>
+                    <rect x="350" y="30" width="120" height="50" rx="8" />
+                    <text x="410" y="60" text-anchor="middle" font-size="12">V</text>
+                    <rect x="200" y="120" width="120" height="50" rx="8" />
+                    <text x="260" y="150" text-anchor="middle" font-size="12">Softmax(QKᵀ)</text>
+                    <line x1="110" y1="80" x2="260" y2="120" />
+                    <line x1="260" y1="80" x2="260" y2="120" />
+                    <line x1="260" y1="170" x2="410" y2="80" />
+                    <rect x="410" y="140" width="60" height="40" rx="6" />
+                    <text x="440" y="165" text-anchor="middle" font-size="12">Out</text>
+                  </g>
+                </svg>
+                <figcaption>Scaled dot-product attention: weights from QKᵀ mix values V.</figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <section id="gnn">
+            <h3>2.5 Graph Neural Networks (GNN)</h3>
+            <p>Operate on graphs: nodes exchange messages along edges to update representations.</p>
+            <ul>
+              <li><strong>Good at</strong>: molecules, social networks, knowledge graphs, recommendation.</li>
+              <li><strong>Limitations</strong>: over-smoothing in deep stacks, scalability on huge graphs.</li>
+            </ul>
+          </section>
+
+          <section id="autoencoders">
+            <h3>2.6 Autoencoders</h3>
+            <p>Compress input into a bottleneck (encoder) and reconstruct (decoder). Useful for denoising, compression, anomaly detection.</p>
+          </section>
+
+          <section id="gans">
+            <h3>2.7 Generative Adversarial Networks (GANs)</h3>
+            <p>Generator produces samples to fool a discriminator; adversarial training improves realism.</p>
+          </section>
+        </section>
+
+        <section id="layers">
+          <h2>3. Types of Layers</h2>
+          <section id="dense">
+            <h3>Dense (Fully Connected)</h3>
+            <p>Computes y = σ(Wx + b). Every input connects to every output.</p>
+            <ul>
+              <li><strong>Use when</strong>: input is a flattened vector or to project features at the end of a network.</li>
+              <li><strong>Tips</strong>: watch parameter count; add dropout/batch-norm for stability.</li>
+            </ul>
+          </section>
+          <section id="conv">
+            <h3>Convolution</h3>
+            <p>Applies learnable filters over local neighborhoods. 2D for images, 1D for sequences, 3D for volumes.</p>
+            <ul>
+              <li><strong>Hyperparameters</strong>: kernel size, stride, padding, dilation, number of filters.</li>
+              <li><strong>Variants</strong>: depthwise separable, transposed conv, dilated conv.</li>
+            </ul>
+          </section>
+          <section id="pool">
+            <h3>Pooling</h3>
+            <p>Reduces spatial size by aggregating features (max/avg). Provides invariance and reduces computation.</p>
+          </section>
+          <section id="recurrent">
+            <h3>Recurrent (RNN, LSTM, GRU)</h3>
+            <p>Maintain a hidden state over time; LSTM/GRU mitigate vanishing gradients with gating mechanisms.</p>
+          </section>
+          <section id="norm">
+            <h3>Normalization</h3>
+            <p>Stabilize training by normalizing activations.</p>
+            <ul>
+              <li><strong>BatchNorm</strong>: per-feature over batch; speeds up convergence.</li>
+              <li><strong>LayerNorm</strong>: per-example over features; often used in transformers.</li>
+              <li><strong>Group/InstanceNorm</strong>: image style transfer and small-batch settings.</li>
+            </ul>
+          </section>
+          <section id="dropout">
+            <h3>Dropout</h3>
+            <p>Randomly zeroes activations during training to reduce co-adaptation and overfitting.</p>
+          </section>
+          <section id="attention">
+            <h3>Attention</h3>
+            <p>Computes similarity between queries and keys to weight values; captures long-range interactions.</p>
+          </section>
+          <section id="embedding">
+            <h3>Embedding</h3>
+            <p>Maps discrete tokens (words, IDs) to dense vectors that are learned with the model.</p>
+          </section>
+          <section id="residual">
+            <h3>Residual/Skip Connections</h3>
+            <p>Add input to output of a block to ease optimization and enable deeper networks.</p>
+          </section>
+        </section>
+
+        <section id="training">
+          <h2>4. Training Workflow</h2>
+          <ol>
+            <li><strong>Forward pass</strong>: compute predictions ŷ from inputs x.</li>
+            <li><strong>Loss</strong>: measure error L(ŷ, y).</li>
+            <li><strong>Backward pass</strong>: compute gradients via backpropagation.</li>
+            <li><strong>Optimization</strong>: update parameters using an optimizer (e.g., Adam).</li>
+            <li><strong>Evaluation</strong>: compute metrics on validation data.</li>
+          </ol>
+          <div class="grid-2">
+            <figure>
+              <svg viewBox="0 0 520 200" width="100%" height="200" role="img" aria-label="Training losses diagram">
+                <g fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="40" y="20" width="440" height="140" rx="8" />
+                  <text x="260" y="22" text-anchor="middle" font-size="12">Epochs →</text>
+                  <text x="16" y="90" text-anchor="middle" font-size="12" transform="rotate(-90 16,90)">Loss</text>
+                  <path d="M50 50 C 150 60, 250 70, 470 120" stroke="var(--warn)" />
+                  <path d="M50 140 C 150 120, 250 100, 470 80" stroke="var(--ok)" />
+                  <text x="420" y="120" font-size="12" fill="var(--warn)">Overfit: Val</text>
+                  <text x="420" y="90" font-size="12" fill="var(--ok)">Train</text>
+                </g>
+              </svg>
+              <figcaption>Training vs validation loss: watch for divergence (overfitting).</figcaption>
+            </figure>
+            <div>
+              <div class="callout">
+                <strong>Tip:</strong> Track both <span class="kbd">loss</span> and <span class="kbd">metrics</span> on validation. Use early stopping.
+              </div>
+              <pre><code># PyTorch training loop (simplified)
+for epoch in range(num_epochs):
+  model.train()
+  for x, y in train_loader:
+    optimizer.zero_grad()
+    y_pred = model(x)
+    loss = criterion(y_pred, y)
+    loss.backward()
+    optimizer.step()
+
+  model.eval()
+  with torch.no_grad():
+    val_loss = 0.0
+    for x, y in val_loader:
+      y_pred = model(x)
+      val_loss += criterion(y_pred, y).item()
+    val_loss /= len(val_loader)
+    scheduler.step(val_loss)  # if using ReduceLROnPlateau
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="dataset-split">
+          <h2>5. Dataset Split</h2>
+          <p>Separate data to estimate generalization and avoid leaking test information into training.</p>
+          <div class="grid-2">
+            <figure>
+              <svg viewBox="0 0 520 140" width="100%" height="140" role="img" aria-label="Dataset split bars">
+                <g>
+                  <rect x="30" y="40" width="320" height="40" fill="rgba(110,231,183,0.45)" stroke="currentColor" />
+                  <rect x="350" y="40" width="80" height="40" fill="rgba(255,209,102,0.45)" stroke="currentColor" />
+                  <rect x="430" y="40" width="60" height="40" fill="rgba(250,165,165,0.45)" stroke="currentColor" />
+                  <text x="190" y="66" text-anchor="middle" font-size="12">Train ~70%</text>
+                  <text x="390" y="66" text-anchor="middle" font-size="12">Val ~15%</text>
+                  <text x="460" y="66" text-anchor="middle" font-size="12">Test ~15%</text>
+                </g>
+              </svg>
+              <figcaption>Typical split: adapt to dataset size and domain. Use stratification when classes are imbalanced.</figcaption>
+            </figure>
+            <div>
+              <ul>
+                <li><strong>Train</strong>: fit model parameters.</li>
+                <li><strong>Validation</strong>: tune hyperparameters, early stopping.</li>
+                <li><strong>Test</strong>: final unbiased evaluation.</li>
+              </ul>
+              <pre><code>from sklearn.model_selection import train_test_split
+
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, stratify=y, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, stratify=y_temp, random_state=42)
+</code></pre>
+              <p class="small">Use group-aware splits for leakage-prone data (e.g., multiple samples from same subject).</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="metrics">
+          <h2>6. Metrics</h2>
+          <p>Choose metrics that reflect real-world costs and benefits. Accuracy is not enough for imbalanced data.</p>
+
+          <h3>6.1 Classification</h3>
+          <div class="grid-2">
+            <figure>
+              <svg viewBox="0 0 300 220" width="100%" height="220" role="img" aria-label="Confusion matrix">
+                <g fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="30" y="30" width="160" height="160" />
+                  <line x1="110" y1="30" x2="110" y2="190" />
+                  <line x1="30" y1="110" x2="190" y2="110" />
+                  <text x="70" y="80" text-anchor="middle" font-size="12" fill="var(--ok)">TP</text>
+                  <text x="150" y="80" text-anchor="middle" font-size="12" fill="var(--warn)">FP</text>
+                  <text x="70" y="160" text-anchor="middle" font-size="12" fill="var(--warn)">FN</text>
+                  <text x="150" y="160" text-anchor="middle" font-size="12">TN</text>
+                  <text x="110" y="210" text-anchor="middle" font-size="12">Predicted →</text>
+                  <text x="10" y="110" text-anchor="middle" font-size="12" transform="rotate(-90 10,110)">Actual</text>
+                </g>
+              </svg>
+              <figcaption>Confusion matrix: TP/FP/FN/TN underpin many metrics.</figcaption>
+            </figure>
+            <div>
+              <ul>
+                <li><strong>Accuracy</strong>: (TP + TN) / all. Misleading with class imbalance.</li>
+                <li><strong>Precision</strong>: TP / (TP + FP) – How many predicted positives are correct?</li>
+                <li><strong>Recall</strong>: TP / (TP + FN) – How many real positives did we find?</li>
+                <li><strong>F1</strong>: harmonic mean of precision and recall.</li>
+                <li><strong>ROC AUC</strong>: trade-off across thresholds; good when costs are symmetric.</li>
+                <li><strong>PR AUC</strong>: better when positives are rare.</li>
+                <li><strong>Top-k accuracy</strong>: for multi-class with many labels.</li>
+              </ul>
+            </div>
+          </div>
+
+          <figure>
+            <svg viewBox="0 0 520 220" width="100%" height="220" role="img" aria-label="ROC and PR curves">
+              <g fill="none" stroke="currentColor" stroke-width="1.6">
+                <rect x="40" y="20" width="200" height="160" rx="8" />
+                <text x="140" y="16" text-anchor="middle" font-size="12">ROC</text>
+                <path d="M50 170 L 230 30" stroke="rgba(255,255,255,0.3)" />
+                <path d="M50 170 C 90 150, 130 120, 230 40" stroke="var(--ok)" />
+                <text x="120" y="185" font-size="12">FPR →</text>
+                <text x="20" y="100" font-size="12" transform="rotate(-90 20,100)">TPR</text>
+
+                <rect x="280" y="20" width="200" height="160" rx="8" />
+                <text x="380" y="16" text-anchor="middle" font-size="12">Precision–Recall</text>
+                <path d="M290 170 C 340 120, 360 110, 470 80" stroke="var(--ok)" />
+                <text x="360" y="185" font-size="12">Recall →</text>
+                <text x="260" y="100" font-size="12" transform="rotate(-90 260,100)">Precision</text>
+              </g>
+            </svg>
+            <figcaption>Prefer PR curves when positives are rare; ROC can look optimistic.</figcaption>
+          </figure>
+
+          <h3>6.2 Regression</h3>
+          <ul>
+            <li><strong>MAE</strong> (mean absolute error): robust to outliers; interpretable in units of target.</li>
+            <li><strong>MSE/RMSE</strong>: penalize large errors more; RMSE in original units.</li>
+            <li><strong>R²</strong>: variance explained; beware of leakage and bias.</li>
+            <li><strong>MAPE</strong>: percent error; unstable when targets near zero.</li>
+          </ul>
+
+          <h3>6.3 Segmentation/Detection</h3>
+          <ul>
+            <li><strong>IoU/Jaccard</strong> and <strong>Dice</strong> for segmentation overlap.</li>
+            <li><strong>mAP</strong> for detection across IoU thresholds.</li>
+          </ul>
+        </section>
+
+        <section id="regularization">
+          <h2>7. Regularization & Generalization</h2>
+          <ul>
+            <li><strong>Early stopping</strong>: stop when validation loss stops improving.</li>
+            <li><strong>Weight decay</strong> (L2) and L1: penalize large weights.</li>
+            <li><strong>Dropout</strong>: randomly zero activations.</li>
+            <li><strong>Data augmentation</strong>: label-preserving transforms (flip, crop, noise).</li>
+            <li><strong>Ensembling</strong>: average predictions from diverse models.</li>
+            <li><strong>Cross-validation</strong>: robust estimates for small datasets.</li>
+          </ul>
+        </section>
+
+        <section id="optimization">
+          <h2>8. Optimization Algorithms</h2>
+          <ul>
+            <li><strong>SGD</strong> + momentum/Nesterov: strong baselines, good generalization.</li>
+            <li><strong>Adam/AdamW</strong>: adaptive steps, fast convergence; use weight decay (AdamW).</li>
+            <li><strong>RMSProp</strong>: like Adam without momentum correction.</li>
+          </ul>
+          <p><strong>Learning rate schedules</strong>: step decay, cosine, one-cycle, warmup. The LR often matters more than other hyperparameters.</p>
+        </section>
+
+        <section id="tuning">
+          <h2>9. Hyperparameter Tuning</h2>
+          <ul>
+            <li><strong>Search</strong>: grid, random, Bayesian, Hyperband/ASHA.</li>
+            <li><strong>Key knobs</strong>: learning rate, batch size, depth/width, dropout rate, weight decay.</li>
+            <li><strong>Protocol</strong>: start simple baseline → widen/deepen → regularize → tune LR/schedule.</li>
+          </ul>
+        </section>
+
+        <section id="deployment">
+          <h2>10. Inference & Deployment</h2>
+          <ul>
+            <li><strong>Export</strong>: ONNX, TorchScript; track versions and metadata.</li>
+            <li><strong>Latency/Throughput</strong>: batch size vs response time; quantization/pruning/distillation.</li>
+            <li><strong>Monitoring</strong>: data drift, concept drift, performance regression.</li>
+            <li><strong>Safety</strong>: input validation, adversarial robustness, PII handling.</li>
+          </ul>
+        </section>
+
+        <section id="checklist">
+          <h2>11. Practical Checklist</h2>
+          <ul>
+            <li><strong>Data</strong>: clean, deduplicate, correct labels; define splits without leakage.</li>
+            <li><strong>Baselines</strong>: start with a simple model and a strong metric baseline.</li>
+            <li><strong>Training</strong>: LR range test; early stopping; checkpointing.</li>
+            <li><strong>Evaluation</strong>: stratified metrics, curves, calibration, error analysis.</li>
+            <li><strong>Repro</strong>: fix random seeds; log configs, metrics, and artifacts.</li>
+          </ul>
+        </section>
+
+        <section id="glossary">
+          <h2>Glossary</h2>
+          <table>
+            <tr><th>Term</th><th>Meaning</th></tr>
+            <tr><td>Activation</td><td>Non-linearity applied after a linear transform (e.g., ReLU, GELU).</td></tr>
+            <tr><td>Backpropagation</td><td>Algorithm to compute gradients of loss w.r.t. parameters efficiently.</td></tr>
+            <tr><td>Batch size</td><td>Number of samples per gradient update.</td></tr>
+            <tr><td>Epoch</td><td>One full pass through the training data.</td></tr>
+            <tr><td>Overfitting</td><td>Low training error, high validation error.</td></tr>
+            <tr><td>Underfitting</td><td>Both training and validation errors are high.</td></tr>
+          </table>
+        </section>
+
+        <p class="small">Made to be self-contained: no external images or scripts. Works offline.</p>
+      </main>
+    </div>
+  </body>
+  </html>
+
+

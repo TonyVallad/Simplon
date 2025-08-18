@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 4. Training Workflow</title>
+    <meta name="description" content="Data pipelines, initialization, forward/backward passes, loss, optimizers, mixed precision, checkpoints." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 4. Training Workflow</div>
+        <h1>4. Training Workflow</h1>
+        <p>An end-to-end recipe: from data loading to stable, reproducible training runs.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#pipeline">Data Pipeline</a></li>
+            <li><a href="#init">Initialization</a></li>
+            <li><a href="#forward-backward">Forward & Backward</a></li>
+            <li><a href="#schedulers">Schedulers</a></li>
+            <li><a href="#amp">Mixed Precision</a></li>
+            <li><a href="#checkpoints">Checkpoints</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="pipeline">
+          <h2>Data Pipeline</h2>
+          <p>Efficient pipelines keep GPUs busy and ensure reproducibility.</p>
+          <ul>
+            <li><strong>Shuffling</strong> per epoch; <strong>stratify</strong> if imbalanced.</li>
+            <li><strong>Augmentation</strong> for images/audio; time-preserving transforms for sequences.</li>
+            <li><strong>Num workers</strong> to saturate I/O; <strong>prefetch</strong> and <strong>pin memory</strong>.</li>
+            <li><strong>Determinism</strong>: fix seeds; log versions and hashes; freeze data splits.</li>
+          </ul>
+        </section>
+
+        <section id="init">
+          <h2>Initialization</h2>
+          <div class="grid-2">
+            <div>
+              <p><strong>Goal:</strong> start training so that signals and gradients neither explode nor vanish as they pass through layers. Good initialization keeps the <em>variance</em> of activations and gradients roughly stable across depth.</p>
+              <div class="callout"><strong>Intuition:</strong> If weights are too large, activations/gradients explode. If too small, they shrink to zero. We pick the initial weight scale using the layer size (fan-in/fan-out) and the activation type.</div>
+              <h3 id="init-why">Why it matters</h3>
+              <ul>
+                <li><strong>Faster convergence</strong>: fewer steps to reach a good solution.</li>
+                <li><strong>Stability</strong>: avoids NaNs and degenerate flat regions.</li>
+                <li><strong>Better signal flow</strong>: gradients reach early layers in deep nets.</li>
+              </ul>
+            </div>
+            <figure>
+              <svg viewBox="0 0 520 200" width="100%" height="200" role="img" aria-label="Activation variance across depth">
+                <g fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="40" y="20" width="440" height="160" rx="8" />
+                  <text x="260" y="16" text-anchor="middle" font-size="12">Layer depth →</text>
+                  <text x="16" y="100" text-anchor="middle" font-size="12" transform="rotate(-90 16,100)">Activation variance</text>
+                  <path d="M50 160 C 120 150, 200 130, 470 40" stroke="var(--warn)" />
+                  <path d="M50 160 C 120 150, 200 150, 470 160" stroke="rgba(255,255,255,0.45)" />
+                  <path d="M50 160 C 120 150, 200 110, 470 80" stroke="var(--ok)" />
+                  <text x="430" y="46" font-size="12" fill="var(--warn)">Exploding</text>
+                  <text x="400" y="160" font-size="12">Vanishing</text>
+                  <text x="410" y="90" font-size="12" fill="var(--ok)">Stable</text>
+                </g>
+              </svg>
+              <figcaption>Pick weight scales so variance stays stable across layers.</figcaption>
+            </figure>
+          </div>
+
+          <h3 id="init-which">Which initialization to use?</h3>
+          <table>
+            <tr><th>Activation</th><th>Recommended init</th><th>Rationale</th></tr>
+            <tr><td>ReLU / LeakyReLU / GELU / SiLU</td><td><strong>Kaiming/He</strong> (fan-in)</td><td>Accounts for half activations being zero (ReLU-family).</td></tr>
+            <tr><td>tanh / sigmoid</td><td><strong>Xavier/Glorot</strong> (fan-avg)</td><td>Balances variance across layers for saturating activations.</td></tr>
+            <tr><td>Linear outputs (regression)</td><td>Small std (e.g., 1e-3)</td><td>Start predictions near zero without saturating loss.</td></tr>
+            <tr><td>Classification logits</td><td>Small std or zero</td><td>Prevents overconfident early predictions.</td></tr>
+          </table>
+
+          <h3 id="init-pytorch">PyTorch examples</h3>
+          <pre><code># Apply Kaiming (He) init for ReLU-like activations; Xavier for tanh/sigmoid
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+def init_module_parameters(module: nn.Module) -> None:
+  for m in module.modules():
+    if isinstance(m, (nn.Conv2d, nn.Linear)):
+      # Choose based on the activation used after this layer
+      nn.init.kaiming_normal_(m.weight, nonlinearity='relu')  # ReLU/LeakyReLU/GELU/SiLU
+      if m.bias is not None:
+        nn.init.zeros_(m.bias)
+    elif isinstance(m, (nn.GRU, nn.LSTM)):
+      for name, param in m.named_parameters():
+        if 'weight_ih' in name or 'weight_hh' in name:
+          nn.init.xavier_uniform_(param)  # good default for recurrent weights
+        elif 'bias' in name:
+          nn.init.zeros_(param)
+
+# If you use tanh/sigmoid immediately after a layer, prefer Xavier:
+def xavier_for_tanh(layer: nn.Linear) -> None:
+  nn.init.xavier_uniform_(layer.weight, gain=nn.init.calculate_gain('tanh'))
+  if layer.bias is not None:
+    nn.init.zeros_(layer.bias)
+
+# Final layer heads
+def init_classification_head(head: nn.Linear) -> None:
+  nn.init.zeros_(head.weight)
+  nn.init.zeros_(head.bias)
+
+def init_regression_head(head: nn.Linear, std: float = 1e-3) -> None:
+  nn.init.normal_(head.weight, mean=0.0, std=std)
+  nn.init.zeros_(head.bias)
+</code></pre>
+
+          <h3 id="init-tips">Practical tips</h3>
+          <ul>
+            <li><strong>Biases</strong>: initialize to zero in most cases. For LSTMs, setting forget gate bias positive (e.g., 1.0) can help retain information early.</li>
+            <li><strong>Normalization layers</strong>: keep defaults (e.g., BatchNorm weight=1, bias=0). Do not apply He/Xavier to norm params.</li>
+            <li><strong>Residual nets</strong>: consider smaller init for residual branches or use <em>zero-init</em> last BN in residual blocks to start near identity.</li>
+            <li><strong>Transformers</strong>: use framework defaults (often Xavier) with careful LayerNorm placement; small init for output heads.</li>
+          </ul>
+
+          <div class="warning"><strong>Sanity checks:</strong> before training, run a forward pass on a batch and verify that
+            (a) activations are finite, (b) gradient norms are not zero or enormous, and (c) initial loss is finite. If gradients explode, reduce LR or check init. If they vanish, switch to He/Xavier as appropriate.</div>
+        </section>
+
+        <section id="forward-backward">
+          <h2>Forward & Backward</h2>
+          <ol>
+            <li>Forward pass computes predictions.</li>
+            <li>Loss compares predictions to targets.</li>
+            <li>Backward pass computes gradients (autodiff).</li>
+            <li>Optimizer updates parameters.</li>
+          </ol>
+          <pre><code># PyTorch sketch
+scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
+for epoch in range(epochs):
+  model.train()
+  for x, y in train_loader:
+    optimizer.zero_grad(set_to_none=True)
+    with torch.cuda.amp.autocast(enabled=use_amp):
+      y_hat = model(x)
+      loss = criterion(y_hat, y)
+    scaler.scale(loss).backward()
+    scaler.step(optimizer)
+    scaler.update()
+
+  model.eval(); val_loss = 0.0
+  with torch.no_grad():
+    for x, y in val_loader:
+      y_hat = model(x)
+      val_loss += criterion(y_hat, y).item()
+  scheduler.step(val_loss / len(val_loader))
+</code></pre>
+        </section>
+
+        <section id="schedulers">
+          <h2>Schedulers</h2>
+          <ul>
+            <li><strong>Step decay</strong>: drop LR at milestones.</li>
+            <li><strong>Cosine</strong> with warmup: smooth decay; strong default.</li>
+            <li><strong>One-cycle</strong>: cyclic schedule that can speed convergence.</li>
+          </ul>
+        </section>
+
+        <section id="amp">
+          <h2>Mixed Precision (AMP)</h2>
+          <p>Use float16/bfloat16 where safe to accelerate training and reduce memory, keeping master weights in float32.</p>
+        </section>
+
+        <section id="checkpoints">
+          <h2>Checkpoints</h2>
+          <p>Save model weights, optimizer state, epoch, and RNG states. Keep best-by-metric and last. Store configs alongside for reproducibility.</p>
+        </section>
+
+        <div class="course-nav">
+          <a href="03_layers.html">← 3. Types of Layers</a>
+          <a href="05_dataset_split.html">Next: 5. Dataset Split →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

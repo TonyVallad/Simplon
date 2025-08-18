@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 9. Hyperparameter Tuning</title>
+    <meta name="description" content="Grid/random search, Bayesian, Hyperband/ASHA, key hyperparameters and tuning strategy." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 9. Hyperparameter Tuning</div>
+        <h1>9. Hyperparameter Tuning</h1>
+        <p>Systematic exploration to find robust, performant settings.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#search">Search Methods</a></li>
+            <li><a href="#knobs">Key Hyperparameters</a></li>
+            <li><a href="#protocol">Protocol</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="search">
+          <h2>Search Methods</h2>
+          <ul>
+            <li><strong>Random search</strong>: better coverage than grid for the same budget.</li>
+            <li><strong>Bayesian</strong>: models the response surface to pick promising trials.</li>
+            <li><strong>Hyperband/ASHA</strong>: early-stop underperformers to save compute.</li>
+          </ul>
+        </section>
+
+        <section id="knobs">
+          <h2>Key Hyperparameters</h2>
+          <ul>
+            <li>Learning rate and schedule.</li>
+            <li>Batch size; accumulation to emulate larger batches.</li>
+            <li>Model depth/width; dropout rate; weight decay.</li>
+            <li>Augmentation strengths; label smoothing; mixup/cutmix.</li>
+          </ul>
+        </section>
+
+        <section id="protocol">
+          <h2>Protocol</h2>
+          <ol>
+            <li>Start with a simple, fast baseline.</li>
+            <li>Find a good LR via range test; set schedule.</li>
+            <li>Increase capacity; add regularization as needed.</li>
+            <li>Tune the most sensitive knobs; measure on validation.</li>
+            <li>Lock the protocol; one final test evaluation.</li>
+          </ol>
+        </section>
+
+        <div class="course-nav">
+          <a href="08_optimization.html">← 8. Optimization</a>
+          <a href="10_inference_deployment.html">Next: 10. Inference & Deployment →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

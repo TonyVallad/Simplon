@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neural Networks – 8. Optimization</title>
+    <meta name="description" content="SGD, Momentum, Nesterov, Adam/AdamW, RMSProp, schedules, LR range tests, gradient clipping." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">Neural Networks</a> / 8. Optimization</div>
+        <h1>8. Optimization</h1>
+        <p>Find good minima efficiently with the right optimizer and learning rate schedule.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#sgd">SGD & Momentum</a></li>
+            <li><a href="#adam">Adam / AdamW</a></li>
+            <li><a href="#rmsprop">RMSProp</a></li>
+            <li><a href="#schedules">Learning Rate Schedules</a></li>
+            <li><a href="#tricks">Practical Tricks</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="sgd">
+          <h2>SGD & Momentum</h2>
+          <p>Strong generalization; momentum accelerates along low-curvature directions and damps oscillations. Nesterov lookahead can further stabilize.</p>
+        </section>
+
+        <section id="adam">
+          <h2>Adam / AdamW</h2>
+          <p>Adaptive per-parameter learning rates; fast convergence. Prefer AdamW (decoupled weight decay). Tune β₁/β₂ carefully for very long runs.</p>
+        </section>
+
+        <section id="rmsprop">
+          <h2>RMSProp</h2>
+          <p>Normalizes updates by running average of squared gradients; simpler cousin to Adam.</p>
+        </section>
+
+        <section id="schedules">
+          <h2>Learning Rate Schedules</h2>
+          <ul>
+            <li><strong>Cosine decay</strong> with warmup: robust default.</li>
+            <li><strong>One-cycle</strong>: increases then decays; can improve speed and generalization.</li>
+            <li><strong>ReduceLROnPlateau</strong>: adapt LR when validation stagnates.</li>
+          </ul>
+        </section>
+
+        <section id="tricks">
+          <h2>Practical Tricks</h2>
+          <ul>
+            <li>Run an LR range test to find a good initial LR.</li>
+            <li>Use gradient clipping to prevent exploding gradients.</li>
+            <li>Zero gradients with set_to_none=True to save memory.</li>
+          </ul>
+        </section>
+
+        <div class="course-nav">
+          <a href="07_regularization.html">← 7. Regularization</a>
+          <a href="09_hyperparameters.html">Next: 9. Hyperparameter Tuning →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+

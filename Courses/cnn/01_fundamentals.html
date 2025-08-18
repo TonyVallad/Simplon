@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CNN – 1. Fundamentals</title>
+    <meta name="description" content="Convolution, correlation, kernels, feature maps, padding/stride/dilation, receptive fields." />
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="hero">
+        <div class="breadcrumb"><a href="../index.html">Courses</a> / <a href="index.html">CNN</a> / 1. Fundamentals</div>
+        <h1>1. Fundamentals</h1>
+        <p>Understand convolutions, kernels, and how CNNs transform images into useful features.</p>
+      </header>
+
+      <aside class="toc">
+        <h2>On this page</h2>
+        <nav>
+          <ul>
+            <li><a href="#conv-vs-corr">Convolution vs Correlation</a></li>
+            <li><a href="#kernel">Kernels & Feature Maps</a></li>
+            <li><a href="#hyperparams">Padding, Stride, Dilation</a></li>
+            <li><a href="#receptive">Receptive Fields</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="conv-vs-corr">
+          <h2>Convolution vs Correlation</h2>
+          <p>In deep learning libraries, “convolution” is typically implemented as <em>cross-correlation</em>: the kernel is not flipped. This choice does not affect learning since the kernel is learned.</p>
+          <pre><code># PyTorch: 2D convolution layer
+import torch.nn as nn
+conv = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3, stride=1, padding=1)
+</code></pre>
+        </section>
+
+        <section id="kernel">
+          <h2>Kernels & Feature Maps</h2>
+          <div class="grid-2">
+            <div>
+              <p>A kernel (filter) slides across the input computing a weighted sum. Each kernel produces one feature map. Stacking many kernels yields many feature maps capturing different patterns (edges, textures, shapes).</p>
+              <ul>
+                <li><strong>Channels</strong>: input channels are combined by the kernel; output channels equal number of filters.</li>
+                <li><strong>Parameter sharing</strong>: the same kernel weights apply at all spatial locations.</li>
+              </ul>
+            </div>
+            <figure>
+              <svg viewBox="0 0 520 220" width="100%" height="220" role="img" aria-label="Kernel sliding">
+                <g fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="30" y="20" width="160" height="160" rx="4"></rect>
+                  <g stroke="rgba(255,255,255,0.3)">
+                    <line x1="70" y1="20" x2="70" y2="180" />
+                    <line x1="110" y1="20" x2="110" y2="180" />
+                    <line x1="150" y1="20" x2="150" y2="180" />
+                    <line x1="30" y1="60" x2="190" y2="60" />
+                    <line x1="30" y1="100" x2="190" y2="100" />
+                    <line x1="30" y1="140" x2="190" y2="140" />
+                  </g>
+                  <rect x="50" y="40" width="60" height="60" fill="rgba(108,193,255,0.25)" />
+                  <rect x="290" y="60" width="100" height="100" rx="4" />
+                  <g>
+                    <line x1="110" y1="70" x2="290" y2="90" />
+                    <line x1="110" y1="100" x2="290" y2="120" />
+                    <line x1="80" y1="100" x2="290" y2="150" />
+                  </g>
+                </g>
+              </svg>
+              <figcaption>Kernel sliding across an image produces a feature map.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="hyperparams">
+          <h2>Padding, Stride, Dilation</h2>
+          <ul>
+            <li><strong>Padding</strong> controls border handling; same padding keeps spatial size.</li>
+            <li><strong>Stride</strong> controls step size; larger stride downsamples.</li>
+            <li><strong>Dilation</strong> spaces kernel elements; enlarges receptive field without extra params.</li>
+          </ul>
+          <pre><code># Output size (2D):
+# H_out = floor((H_in + 2P - D(K-1) - 1)/S + 1)
+# W_out = floor((W_in + 2P - D(K-1) - 1)/S + 1)
+</code></pre>
+        </section>
+
+        <section id="receptive">
+          <h2>Receptive Fields</h2>
+          <p>Stacking layers increases the receptive field—the input region that affects an output unit. Pooling, stride, and dilation all expand the receptive field.</p>
+        </section>
+
+        <div class="course-nav">
+          <a href="index.html">← Overview</a>
+          <a href="02_layers_blocks.html">Next: 2. Layers & Blocks →</a>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/course.js"></script>
+  </body>
+  </html>
+
